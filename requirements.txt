@@ -1,5 +1,5 @@
 streamlit>=1.32.0
-tensorflow-cpu==2.15.1
+tensorflow-cpu==2.19.0
 gdown
 pillow
 numpy
