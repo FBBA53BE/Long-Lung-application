@@ -337,7 +337,7 @@ def load_models():
     if not os.path.exists("EffnetModel.keras"):
         with st.spinner("Downloading classification model…"):
             gdown.download(
-                "https://drive.google.com/file/d/1I3uHydg5JDTi6EQ1xn9ZQ1daDcXb9csW/view?usp=share_link",  # ← แก้ตรงนี้
+                "https://drive.google.com/uc?id=1I3uHydg5JDTi6EQ1xn9ZQ1daDcXb9csW",  # ← แก้ตรงนี้
                 "EffnetModel.keras", quiet=False
             )
     effnet = tf.keras.models.load_model("EffnetModel.keras")
@@ -346,7 +346,7 @@ def load_models():
     if not os.path.exists("unet_lung_cancer_full_NEW.pth"):
         with st.spinner("Downloading segmentation model…"):
             gdown.download(
-                "https://drive.google.com/file/d/1tPo-cywtiLAJAEOVORoiomSuNV7g40FV/view?usp=share_link",    # ← แก้ตรงนี้
+                "https://drive.google.com/uc?id=1tPo-cywtiLAJAEOVORoiomSuNV7g40FV",    # ← แก้ตรงนี้
                 "unet_lung_cancer_full_NEW.pth", quiet=False
             )
     # โหลด U-Net PyTorch — ต้องมี class UNet define ไว้ด้วย
