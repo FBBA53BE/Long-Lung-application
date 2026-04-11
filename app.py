@@ -350,9 +350,12 @@ def load_models():
                 "unet_lung_cancer_full_NEW.pth", quiet=False
             )
     # โหลด U-Net PyTorch — ต้องมี class UNet define ไว้ด้วย
-    unet = torch.load("unet_lung_cancer_full_NEW.pth",
-                      map_location=torch.device("cpu"))
+    unet = UNet()
+    checkpoint = torch.load("unet_lung_cancer_full_NEW.pth",
+                        map_location=torch.device("cpu"))
+    unet.load_state_dict(checkpoint["model_state_dict"])  # ← ดึง key นี้ออกมา
     unet.eval()
+   
 
     return effnet, unet
 
