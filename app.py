@@ -405,22 +405,29 @@ def overlay_gradcam(img: Image.Image, heatmap, alpha=0.45):
     return np.clip((1 - alpha) * base + alpha * colored, 0, 1)
 
 import torch
-
 def segment_unet(img: Image.Image, unet):
-    arr = np.array(img.resize((256, 256)), dtype=np.float32) / 255.0
-    arr = np.transpose(arr, (2, 0, 1))      # (3, 256, 256)
-    arr = np.expand_dims(arr, 0)            # (1, 3, 256, 256)
-    
-    # ใช้ tensor() แทน from_numpy() — ไม่มีปัญหา numpy compatibility
+    arr = np.array(img.resize((256, 256)), dtype=np.float32)
+
+    # ถ้าเป็น grayscale ให้ stack เป็น 3 channel
+    if arr.ndim == 2:
+        arr = np.stack([arr]*3, axis=-1)
+
+    # ✅ normalize แบบเดียวกับ train — per-image min/max
+    arr = arr - arr.min()
+    if arr.max() > 0:
+        arr = arr / arr.max()
+
+    arr = np.transpose(arr, (2, 0, 1))   # (3, 256, 256)
+    arr = np.expand_dims(arr, 0)          # (1, 3, 256, 256)
     tensor = torch.tensor(arr)
 
     with torch.no_grad():
         output = unet(tensor)
         mask   = torch.sigmoid(output)
-        mask   = mask[0, 0].detach().numpy()   # (256, 256)
+        mask   = mask[0, 0].detach().numpy()
 
-    return (mask > 0.5).astype(np.float32)
-
+    print(f"Mask min: {mask.min():.4f}, max: {mask.max():.4f}")
+    return (mask > 0.3).astype(np.float32)  # threshold 0.3
 
 def overlay_mask(img: Image.Image, mask):
     base     = np.array(img.resize((256, 256)), dtype=np.float32) / 255.0
