@@ -1,8 +1,8 @@
 streamlit>=1.32.0
-tensorflow>=2.15.0
+tensorflow==2.15.1
 gdown
 pillow
 numpy
 matplotlib
-torch
-torchvision
+torch==2.2.0
+torchvision==0.17.0
