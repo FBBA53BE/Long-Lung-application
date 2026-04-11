@@ -408,17 +408,19 @@ import torch
 
 def segment_unet(img: Image.Image, unet):
     arr = np.array(img.resize((256, 256)), dtype=np.float32) / 255.0
-    # PyTorch ต้องการ (batch, channel, H, W)
-    arr = np.transpose(arr, (2, 0, 1))        # (3, 256, 256)
-    arr = np.expand_dims(arr, 0)              # (1, 3, 256, 256)
-    tensor = torch.from_numpy(arr)
+    arr = np.transpose(arr, (2, 0, 1))      # (3, 256, 256)
+    arr = np.expand_dims(arr, 0)            # (1, 3, 256, 256)
+    
+    # ใช้ tensor() แทน from_numpy() — ไม่มีปัญหา numpy compatibility
+    tensor = torch.tensor(arr)
 
     with torch.no_grad():
-        output = unet(tensor)                 # (1, 1, 256, 256)
-        mask   = torch.sigmoid(output)        # ถ้า model ไม่มี sigmoid ใน forward
-        mask   = mask[0, 0].numpy()           # (256, 256)
+        output = unet(tensor)
+        mask   = torch.sigmoid(output)
+        mask   = mask[0, 0].detach().numpy()   # (256, 256)
 
     return (mask > 0.5).astype(np.float32)
+
 
 def overlay_mask(img: Image.Image, mask):
     base     = np.array(img.resize((256, 256)), dtype=np.float32) / 255.0
