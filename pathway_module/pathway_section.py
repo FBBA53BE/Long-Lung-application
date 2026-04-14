@@ -240,7 +240,7 @@ def _render_drug_table(enriched: list[dict]):
             }
             return colors.get(val, "")
 
-        styled = df.style.applymap(color_level, subset=["Evidence Level"])
+        styled = df.style.map(color_level, subset=["Evidence Level"])
         st.dataframe(styled, use_container_width=True, hide_index=True)
     else:
         st.info("ไม่พบ approved drug สำหรับ mutation เหล่านี้ใน OncoKB — อาจต้องดู clinical trials")
