@@ -169,8 +169,7 @@ def _patient_table(patient_info: dict, pred_class: str,
 
 
 # ── Classification result ─────────────────────────────────────────────────────
-def _classification_section(pred_class: str, confidence: float,
-                             probs: dict, styles):
+def _classification_section(pred_class, confidence, probs, styles):
     elems = _section_header("Classification Result", styles)
 
     is_cancer = pred_class not in ["Normal", "Benign"]
@@ -200,33 +199,45 @@ def _classification_section(pred_class: str, confidence: float,
     elems.append(badge)
     elems.append(Spacer(1, 0.3*cm))
 
-    # Probability bars as table
+    # ── แก้ตรงนี้ — ใช้ % bar แทน █ character ──────────────
     if probs:
-        bar_data = [["Class", "Probability", "Bar"]]
         sorted_probs = sorted(probs.items(), key=lambda x: -x[1])
-        for cls, prob in sorted_probs:
-            pct = f"{prob*100:.1f}%"
-            bar_len = max(1, int(prob * 80))
-            bar = "█" * bar_len
-            bar_data.append([cls, pct, bar])
 
-        bar_t = Table(bar_data, colWidths=[6*cm, 2.5*cm, 7.5*cm])
-        bar_t.setStyle(TableStyle([
+        prob_data = [["Class", "Probability"]]
+        for cls, prob in sorted_probs:
+            prob_data.append([cls, f"{prob*100:.1f}%"])
+
+        prob_t = Table(prob_data, colWidths=[10*cm, 6*cm])
+        prob_style = [
             ("FONTNAME",  (0,0), (-1,0),  "Helvetica-Bold"),
             ("FONTNAME",  (0,1), (-1,-1), "Helvetica"),
-            ("FONTSIZE",  (0,0), (-1,-1), 8),
-            ("TEXTCOLOR", (0,0), (-1,0),  C_MUTED),
-            ("TEXTCOLOR", (2,1), (2,-1),  C_ACCENT),
-            ("GRID",      (0,0), (-1,-1), 0.3,
-             colors.HexColor("#E0E0DC")),
+            ("FONTSIZE",  (0,0), (-1,-1), 9),
+            ("BACKGROUND",(0,0), (-1,0),  C_BG),
+            ("TEXTCOLOR", (0,0), (-1,0),  C_WHITE),
             ("ROWBACKGROUNDS", (0,1), (-1,-1),
              [colors.white, colors.HexColor("#F8F8F6")]),
-            ("TOPPADDING",    (0,0), (-1,-1), 4),
-            ("BOTTOMPADDING", (0,0), (-1,-1), 4),
-            ("LEFTPADDING",   (0,0), (-1,-1), 6),
-        ]))
-        elems.append(bar_t)
+            ("GRID",      (0,0), (-1,-1), 0.3,
+             colors.HexColor("#E0E0DC")),
+            ("TOPPADDING",    (0,0), (-1,-1), 5),
+            ("BOTTOMPADDING", (0,0), (-1,-1), 5),
+            ("LEFTPADDING",   (0,0), (-1,-1), 8),
+            ("ALIGN",     (1,0), (1,-1), "RIGHT"),
+        ]
+        # highlight top prediction
+        if sorted_probs:
+            top_cls = sorted_probs[0][0]
+            is_top_cancer = top_cls not in ["Normal", "Benign"]
+            top_color = C_DANGER if is_top_cancer else C_ACCENT
+            prob_style.append(("TEXTCOLOR", (0,1), (-1,1), top_color))
+            prob_style.append(("FONTNAME",  (0,1), (-1,1), "Helvetica-Bold"))
+
+        prob_t.setStyle(TableStyle(prob_style))
+        elems.append(prob_t)
+
     return elems
+
+
+
 
 
 # ── Mutation section ──────────────────────────────────────────────────────────
