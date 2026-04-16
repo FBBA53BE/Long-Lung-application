@@ -833,17 +833,79 @@ const cy = cytoscape({{
 
 cy.on('tap', 'node', function(evt) {{
   const id = evt.target.id();
-  const mut = MUTS.find(m => m.gene === id);
-  if (!mut) return;
+
+  const nodeInfo = {{
+    'EGFR':   {{desc: 'EGFR — receptor tyrosine kinase, activates RAS & PI3K pathways'}},
+    'MET':    {{desc: 'MET — hepatocyte growth factor receptor, bypass pathway'}},
+    'ALK':    {{desc: 'ALK — fusion oncogene, ~5% NSCLC'}},
+    'RAS':    {{desc: 'RAS — central signal relay downstream of EGFR/MET/ALK'}},
+    'RAF':    {{desc: 'RAF — MAPK cascade step 1, activated by RAS'}},
+    'MEK':    {{desc: 'MEK1/2 — MAPK cascade step 2'}},
+    'ERK':    {{desc: 'ERK — transcription factor activator, drives proliferation'}},
+    'PI3K':   {{desc: 'PI3K Class 1A — survival signaling hub'}},
+    'AKT':    {{desc: 'AKT — master survival kinase'}},
+    'mTOR':   {{desc: 'mTORC1/2 — controls protein synthesis & growth'}},
+    'MDM2':   {{desc: 'MDM2 — degrades TP53 (AKT activates MDM2)'}},
+    'TP53':   {{desc: 'TP53 — tumor suppressor, induces apoptosis when mutated → inactivated'}},
+    'STAT3':  {{desc: 'STAT3 — transcription factor, activated by JAK'}},
+    'JAK':    {{desc: 'JAK — activated by EGFR, phosphorylates STAT3'}},
+    'T-cell': {{desc: 'T-cell (immune) — kills tumor cells via PD-1/PD-L1 checkpoint'}},
+    'Proliferation': {{desc: 'Outcome: uncontrolled tumor cell division'}},
+    'Cell survival': {{desc: 'Outcome: tumor evades apoptosis'}},
+    'Apoptosis':     {{desc: 'Outcome: programmed cell death (suppressed by mutations)'}},
+    'ROS1':   {{desc: 'ROS1 — fusion oncogene, ~2% NSCLC, TKI-sensitive'}},
+    'RET':    {{desc: 'RET — fusion oncogene, ~2% NSCLC, selective TKI available'}},
+    'FGFR1':  {{desc: 'FGFR1 — amplified in ~20% squamous NSCLC'}},
+    'FGFR2':  {{desc: 'FGFR2 — FGFR pathway alteration'}},
+    'FGFR3':  {{desc: 'FGFR3 — FGFR pathway, fusion or mutation'}},
+    'NTRK':   {{desc: 'NTRK fusion — tumor-agnostic TRK inhibitor indication'}},
+    'BRCA1':  {{desc: 'BRCA1 — DNA repair (HRR), loss → PARP inhibitor sensitive'}},
+    'BRCA2':  {{desc: 'BRCA2 — DNA repair (HRR), loss → PARP inhibitor sensitive'}},
+    'ATM':    {{desc: 'ATM — DNA damage response, loss → HRD phenotype'}},
+    'CDK4':   {{desc: 'CDK4 — cell cycle kinase, amplification drives G1→S'}},
+    'CDK6':   {{desc: 'CDK6 — CDK4/6 complex, cell cycle progression'}},
+    'PIK3CA': {{desc: 'PIK3CA — PI3K catalytic subunit, activating mutations common'}},
+    'PTEN':   {{desc: 'PTEN — PI3K suppressor, loss hyperactivates AKT'}},
+    'NF1':    {{desc: 'NF1 — RAS GTPase activator, loss hyperactivates RAS'}},
+    'ERBB2':  {{desc: 'ERBB2 (HER2) — ~3% NSCLC, T-DXd FDA approved'}},
+    'STK11':  {{desc: 'STK11 — tumor suppressor, loss → immunotherapy resistance'}},
+    'KEAP1':  {{desc: 'KEAP1 — oxidative stress regulator, loss → poor TKI response'}},
+    'MAP2K1': {{desc: 'MAP2K1 (MEK1) — MAPK cascade, MEK inhibitor target'}},
+    'MAP2K2': {{desc: 'MAP2K2 (MEK2) — MAPK cascade'}},
+    'CDK4':   {{desc: 'CDK4 — cell cycle kinase, CDK4/6 inhibitor target'}},
+    'CDKN2A': {{desc: 'CDKN2A — CDK inhibitor, loss releases CDK4/6'}},
+    'POLE':   {{desc: 'POLE — DNA polymerase, mutations → ultra-high TMB → immunotherapy'}},
+    'SMARCA4':{{desc: 'SMARCA4 — chromatin remodeling, SWI/SNF complex'}},
+    'ARID1A': {{desc: 'ARID1A — SWI/SNF complex, tumor suppressor'}},
+    'MYC':    {{desc: 'MYC — transcription factor, amplification drives proliferation'}},
+    'PDCD1':  {{desc: 'PDCD1 (PD-1) — immune checkpoint on T-cells'}},
+    'CD274':  {{desc: 'CD274 (PD-L1) — immune evasion on tumor cells'}},
+  }};
+
+  const isMutated = evt.target.data('isMutated');
+  const mut  = MUTS.find(m => m.gene === id);
+  const info = nodeInfo[id];
+
   const existing = document.querySelector('.node-popup');
   if (existing) existing.remove();
+
   const box = document.createElement('div');
   box.className = 'card node-popup';
   box.style.marginTop = '8px';
-  box.innerHTML = `
-    <div class="gene-name" style="color:#a32d2d;">${{id}} — Mutated</div>
-    <div class="gene-alt">${{mut.alteration}} | ${{mut.oncogenicity}}</div>
-    <div class="gene-desc" style="margin-top:4px;">${{mut.desc}}</div>`;
+
+  if (isMutated && mut) {{
+    box.innerHTML = `
+      <div class="gene-name" style="color:#a32d2d;">${{id}} — Mutated</div>
+      <div class="gene-alt">${{mut.alteration}} | VAF: ${{mut.vaf_display}} | ${{mut.oncogenicity}}</div>
+      <div class="gene-desc" style="margin-top:4px;">${{mut.desc}}</div>`;
+  }} else if (info) {{
+    box.innerHTML = `
+      <div class="gene-name">${{id}}</div>
+      <div class="gene-desc" style="margin-top:4px;">${{info.desc}}</div>`;
+  }} else {{
+    return;
+  }}
+
   document.getElementById('right-content').prepend(box);
 }});
 
