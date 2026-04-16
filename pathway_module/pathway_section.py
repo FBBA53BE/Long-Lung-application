@@ -189,12 +189,6 @@ def render_pathway_section(cancer_type: str = "Adenocarcinoma"):
 
     # ─── Show results ─────────────────────────────────────────────────────────
     if "enriched_mutations" in st.session_state:
-        st.write("**Debug — drug names:**")
-        for m in st.session_state["enriched_mutations"]:
-            for tx in m["oncokb"].get("treatments", []):
-              drug = " + ".join(d["drugName"] for d in tx["drugs"])
-              st.write(f"`{m['gene']}` → `{drug}`")
-        st.divider()
         enriched  = st.session_state["enriched_mutations"]
         pt_info   = st.session_state.get("patient_info", {})
 
