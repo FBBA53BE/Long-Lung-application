@@ -29,6 +29,10 @@ PATHWAY_NODES = [
     ("Proliferation","Proliferation", "outcome",    "outcome"),
     ("Cell survival","Cell Survival", "outcome",    "outcome"),
     ("Apoptosis",    "Apoptosis\n(suppr.)", "outcome", "outcome"),
+    ("ROS1",  "ROS1",  "receptor", "receptor"),
+    ("RET",   "RET",   "receptor", "receptor"),
+    ("FGFR",  "FGFR",  "receptor", "receptor"),
+    ("NTRK",  "NTRK",  "receptor", "receptor"),
 ]
 
 PATHWAY_EDGES = [
@@ -54,6 +58,10 @@ PATHWAY_EDGES = [
     ("JAK",   "STAT3",        "activates"),
     ("STAT3", "Proliferation","activates"),
     ("T-cell","Apoptosis",    "immune kill"),
+    ("ROS1", "RAS", "activates"),
+    ("RET",  "RAS", "activates"),
+    ("FGFR", "PI3K","activates"),
+    ("NTRK", "RAS", "activates"),
 ]
 
 # ─── Drug → pathway effect mapping ────────────────────────────────────────────
