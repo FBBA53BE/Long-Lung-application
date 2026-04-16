@@ -685,7 +685,7 @@ LOCAL_DB = {
         "description": "MYC amplification — no direct approved targeted therapy. Immunotherapy may help.",
     },
 }
-}
+
 
 LEVEL_COLORS = {
     "LEVEL_1": "#27500A",   # FDA-approved
