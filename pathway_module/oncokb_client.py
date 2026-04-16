@@ -1010,12 +1010,17 @@ def _parse_oncokb_response(data: dict) -> dict:
         "description": data.get("mutationEffect", {}).get("description", ""),
     }
 
-
 def _local_lookup(gene: str, alteration: str) -> dict:
-    key = (gene.upper(), alteration)
+    gene = gene.upper()
+    # 1. ลองหา exact match ก่อน
+    key = (gene, alteration)
     if key in LOCAL_DB:
         return LOCAL_DB[key]
-    # Generic fallback
+    # 2. ลอง "any" key สำหรับ gene ที่ไม่ได้ระบุ alteration
+    key_any = (gene, "any")
+    if key_any in LOCAL_DB:
+        return LOCAL_DB[key_any]
+    # 3. ไม่พบ
     return {
         "oncogenicity": "Unknown",
         "mutationEffect": "Unknown",
@@ -1024,7 +1029,6 @@ def _local_lookup(gene: str, alteration: str) -> dict:
         "description": f"No curated data for {gene} {alteration}. "
                        "Consider checking ClinVar or COSMIC manually.",
     }
-
 
 def query_all_mutations(mutation_list: list[dict]) -> list[dict]:
     """
