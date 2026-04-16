@@ -567,6 +567,17 @@ DRUG_EFFECTS = {
         "mechanism": "DNA minor groove binder — disrupts transcription factor binding",
         "cascade_text": ["DNA minor groove bound","→ Transcription factor binding blocked","→ DNA repair pathway hijacked","→ Apoptosis induced"],
     },
+    "Ipatasertib": {
+    "color": "#185FA5", "targets": ["AKT"],
+    "cascade": ["mTOR"],
+    "outcomes": ["Cell survival"], "restored": [],
+    "mechanism": "AKT inhibitor — clinical trials for AKT1 mutant solid tumors",
+    "cascade_text": [
+        "AKT kinase blocked",
+        "→ mTOR signaling suppressed",
+        "→ Cell survival pathway reduced",
+    ],
+},
 }
 
 def build_cytoscape_elements(mutations_with_oncokb: list) -> tuple:
