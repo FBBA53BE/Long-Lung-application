@@ -10,7 +10,7 @@ import time
 import sys
 import torch
 import torch.nn as nn
-
+from pathway_module.report_generator import generate_report_pdf
 sys.path.append(os.path.dirname(__file__))
 from pathway_module.pathway_section import render_pathway_section, get_sample_csv_bytes
 
@@ -234,6 +234,20 @@ def overlay_gradcam(img: Image.Image, heatmap, alpha=0.45):
     base    = np.array(img, dtype=np.float32) / 255.0
     return np.clip((1 - alpha) * base + alpha * colored, 0, 1)
 
+import io
+from PIL import Image
+
+def img_to_bytes(arr_or_img):
+    buf = io.BytesIO()
+    if isinstance(arr_or_img, np.ndarray):
+        Image.fromarray((arr_or_img * 255).astype(np.uint8)).save(buf, format="PNG")
+    else:
+        arr_or_img.save(buf, format="PNG")
+    return buf.getvalue()
+
+ct_bytes      = img_to_bytes(img_resized)
+heatmap_bytes = img_to_bytes(overlay) if overlay is not None else None
+seg_bytes     = img_to_bytes(seg_overlay) if seg_overlay is not None else None
 def segment_unet(img: Image.Image, unet):
     arr = np.array(img.resize((256, 256)), dtype=np.float32)
     if arr.ndim == 2:
@@ -395,6 +409,24 @@ if uploaded:
         )
         render_pathway_section(cancer_type=pred_class)
 
+    if is_cancer and "enriched_mutations" in st.session_state:
+    pdf_bytes = generate_report_pdf(
+        patient_info=st.session_state.get("patient_info", {}),
+        pred_class=pred_class,
+        confidence=confidence,
+        probs=dict(zip(USE_CLASSES, probs)),
+        enriched_mutations=st.session_state["enriched_mutations"],
+        ct_img_bytes=ct_bytes,
+        heatmap_bytes=heatmap_bytes,
+        seg_bytes=seg_bytes,
+    )
+    st.download_button(
+        label="📥 Download Full Report (PDF)",
+        data=pdf_bytes,
+        file_name=f"longling_report_{datetime.now().strftime('%Y%m%d')}.pdf",
+        mime="application/pdf",
+        type="primary",
+    )
 # ── Footer ────────────────────────────────────────────────────
 st.markdown("""
 <div class="footer">
