@@ -66,144 +66,495 @@ PATHWAY_EDGES = [
 
 # ─── Drug → pathway effect mapping ────────────────────────────────────────────
 DRUG_EFFECTS = {
+ 
+    # ── EGFR inhibitors ──────────────────────────────────────
     "Osimertinib": {
-        "color": "#378ADD",
-        "targets": ["EGFR"],
-        "cascade": ["RAS", "PI3K", "RAF", "AKT", "MEK", "ERK", "mTOR", "MDM2"],
-        "outcomes": ["Proliferation", "Cell survival"],
-        "restored": [],
-        "mechanism": "3rd-gen EGFR TKI — covalently binds EGFR L858R & T790M mutant kinase",
-        "cascade_text": [
-            "EGFR kinase blocked",
-            "→ RAS cannot be activated",
-            "→ RAF / MEK / ERK cascade suppressed",
-            "→ PI3K / AKT / mTOR suppressed",
-            "→ Proliferation + Cell survival reduced",
-        ],
+        "color": "#378ADD", "targets": ["EGFR"],
+        "cascade": ["RAS","PI3K","RAF","AKT","MEK","mTOR"],
+        "outcomes": ["Proliferation","Cell survival"], "restored": [],
+        "mechanism": "3rd-gen EGFR TKI — covalently binds L858R & T790M mutant EGFR",
+        "cascade_text": ["EGFR kinase blocked","→ RAS cannot activate","→ RAF/MEK/ERK suppressed","→ PI3K/AKT/mTOR suppressed","→ Proliferation + Survival reduced"],
     },
     "Erlotinib": {
-        "color": "#185FA5",
-        "targets": ["EGFR"],
-        "cascade": ["RAS", "PI3K", "RAF", "AKT", "MEK", "ERK"],
-        "outcomes": ["Proliferation"],
-        "restored": [],
+        "color": "#185FA5", "targets": ["EGFR"],
+        "cascade": ["RAS","PI3K","RAF","AKT","MEK"],
+        "outcomes": ["Proliferation"], "restored": [],
         "mechanism": "1st-gen EGFR TKI — reversible competitive inhibitor",
-        "cascade_text": [
-            "EGFR blocked (reversible)",
-            "→ RAS / RAF / MEK suppressed",
-            "→ PI3K / AKT suppressed",
-            "→ Proliferation reduced",
-        ],
+        "cascade_text": ["EGFR blocked (reversible)","→ RAS/RAF/MEK suppressed","→ PI3K/AKT suppressed","→ Proliferation reduced"],
     },
+    "Gefitinib": {
+        "color": "#185FA5", "targets": ["EGFR"],
+        "cascade": ["RAS","PI3K","RAF","AKT","MEK"],
+        "outcomes": ["Proliferation"], "restored": [],
+        "mechanism": "1st-gen EGFR TKI — competitive ATP binding inhibitor",
+        "cascade_text": ["EGFR blocked","→ RAS/RAF/MEK suppressed","→ Proliferation reduced"],
+    },
+    "Afatinib": {
+        "color": "#185FA5", "targets": ["EGFR"],
+        "cascade": ["RAS","PI3K","RAF","AKT","MEK","STAT3"],
+        "outcomes": ["Proliferation","Cell survival"], "restored": [],
+        "mechanism": "2nd-gen EGFR/HER2/HER4 TKI — irreversible pan-ErbB inhibitor",
+        "cascade_text": ["EGFR + HER2/4 irreversibly blocked","→ RAS/MAPK suppressed","→ PI3K/AKT suppressed","→ STAT3 signaling reduced","→ Proliferation + Survival reduced"],
+    },
+    "Dacomitinib": {
+        "color": "#185FA5", "targets": ["EGFR"],
+        "cascade": ["RAS","PI3K","RAF","AKT","MEK"],
+        "outcomes": ["Proliferation","Cell survival"], "restored": [],
+        "mechanism": "2nd-gen irreversible pan-HER TKI",
+        "cascade_text": ["Pan-HER irreversibly blocked","→ RAS + PI3K suppressed","→ Proliferation + Survival reduced"],
+    },
+    "Mobocertinib": {
+        "color": "#185FA5", "targets": ["EGFR"],
+        "cascade": ["RAS","PI3K","RAF","AKT","MEK"],
+        "outcomes": ["Proliferation","Cell survival"], "restored": [],
+        "mechanism": "EGFR exon 20 insertion-specific TKI",
+        "cascade_text": ["EGFR exon20ins specifically blocked","→ RAS/PI3K suppressed","→ Proliferation + Survival reduced"],
+    },
+    "Amivantamab": {
+        "color": "#0C447C", "targets": ["EGFR","MET"],
+        "cascade": ["RAS","PI3K","AKT"],
+        "outcomes": ["Proliferation","Cell survival"], "restored": [],
+        "mechanism": "Bispecific EGFR/MET antibody — blocks both receptors + immune activation",
+        "cascade_text": ["EGFR + MET both blocked (antibody)","→ RAS + PI3K suppressed","→ Fc-mediated immune killing","→ Proliferation + Survival reduced"],
+    },
+    "Necitumumab": {
+        "color": "#0C447C", "targets": ["EGFR"],
+        "cascade": ["RAS","PI3K","RAF","AKT"],
+        "outcomes": ["Proliferation","Cell survival"], "restored": [],
+        "mechanism": "Anti-EGFR monoclonal antibody — approved for squamous NSCLC",
+        "cascade_text": ["EGFR ligand binding blocked","→ Receptor dimerization prevented","→ RAS + PI3K suppressed","→ Proliferation reduced"],
+    },
+ 
+    # ── MET inhibitors ───────────────────────────────────────
     "Tepotinib": {
-        "color": "#639922",
-        "targets": ["MET"],
-        "cascade": ["RAS", "PI3K", "AKT", "mTOR"],
-        "outcomes": ["Cell survival"],
-        "restored": [],
-        "mechanism": "Selective MET inhibitor — blocks MET amplification bypass signaling",
-        "cascade_text": [
-            "MET amplification blocked",
-            "→ PI3K (via MET) suppressed",
-            "→ AKT / mTOR reduced",
-            "→ Cell survival weakened",
-        ],
+        "color": "#639922", "targets": ["MET"],
+        "cascade": ["RAS","PI3K","AKT","mTOR"],
+        "outcomes": ["Cell survival"], "restored": [],
+        "mechanism": "Selective MET inhibitor — MET exon14 skip & amplification",
+        "cascade_text": ["MET amplification blocked","→ PI3K (via MET) suppressed","→ AKT/mTOR reduced","→ Cell survival weakened"],
     },
     "Capmatinib": {
-        "color": "#3B6D11",
-        "targets": ["MET"],
-        "cascade": ["RAS", "PI3K", "AKT"],
-        "outcomes": ["Cell survival"],
-        "restored": [],
+        "color": "#3B6D11", "targets": ["MET"],
+        "cascade": ["RAS","PI3K","AKT"],
+        "outcomes": ["Cell survival"], "restored": [],
         "mechanism": "Selective MET inhibitor — FDA approved for MET exon14 skipping",
-        "cascade_text": [
-            "MET kinase blocked",
-            "→ PI3K arm suppressed",
-            "→ Cell survival reduced",
-        ],
+        "cascade_text": ["MET kinase blocked","→ PI3K arm suppressed","→ Cell survival reduced"],
     },
+    "Crizotinib": {
+        "color": "#D85A30", "targets": ["ALK","MET"],
+        "cascade": ["RAS","PI3K","RAF","AKT"],
+        "outcomes": ["Proliferation","Cell survival"], "restored": [],
+        "mechanism": "1st-gen ALK/MET/ROS1 inhibitor",
+        "cascade_text": ["ALK + MET both inhibited","→ RAS / PI3K suppressed","→ Proliferation reduced"],
+    },
+ 
+    # ── ALK inhibitors ───────────────────────────────────────
     "Alectinib": {
-        "color": "#D85A30",
-        "targets": ["ALK"],
-        "cascade": ["RAS", "PI3K", "RAF", "AKT", "MEK", "ERK"],
-        "outcomes": ["Proliferation", "Cell survival"],
-        "restored": [],
-        "mechanism": "2nd-gen ALK inhibitor — covers ALK fusions, CNS penetrant",
-        "cascade_text": [
-            "ALK fusion kinase blocked",
-            "→ RAS + PI3K both suppressed",
-            "→ Downstream effectors reduced",
-            "→ Proliferation + Survival reduced",
-        ],
+        "color": "#D85A30", "targets": ["ALK"],
+        "cascade": ["RAS","PI3K","RAF","AKT","MEK","ERK"],
+        "outcomes": ["Proliferation","Cell survival"], "restored": [],
+        "mechanism": "2nd-gen ALK inhibitor — CNS penetrant, covers resistance mutations",
+        "cascade_text": ["ALK fusion kinase blocked","→ RAS + PI3K both suppressed","→ RAF/MEK/ERK cascade drops","→ Proliferation + Cell survival reduced"],
     },
+    "Lorlatinib": {
+        "color": "#D85A30", "targets": ["ALK"],
+        "cascade": ["RAS","PI3K","RAF","AKT","MEK","ERK"],
+        "outcomes": ["Proliferation","Cell survival"], "restored": [],
+        "mechanism": "3rd-gen ALK/ROS1 inhibitor — overcomes all known resistance mutations",
+        "cascade_text": ["ALK (3rd gen) blocked","→ Resistance mutations covered","→ RAS + PI3K suppressed","→ Proliferation + Survival reduced"],
+    },
+    "Brigatinib": {
+        "color": "#D85A30", "targets": ["ALK"],
+        "cascade": ["RAS","PI3K","RAF","AKT","MEK"],
+        "outcomes": ["Proliferation","Cell survival"], "restored": [],
+        "mechanism": "2nd-gen ALK inhibitor — potent CNS activity",
+        "cascade_text": ["ALK fusion blocked","→ RAS/PI3K suppressed","→ Proliferation + Survival reduced"],
+    },
+    "Ceritinib": {
+        "color": "#D85A30", "targets": ["ALK"],
+        "cascade": ["RAS","PI3K","RAF","AKT","MEK"],
+        "outcomes": ["Proliferation","Cell survival"], "restored": [],
+        "mechanism": "2nd-gen ALK inhibitor — covers L1196M resistance",
+        "cascade_text": ["ALK kinase blocked","→ RAS/PI3K suppressed","→ Proliferation reduced"],
+    },
+    "Repotrectinib": {
+        "color": "#D85A30", "targets": ["ALK"],
+        "cascade": ["RAS","PI3K","AKT"],
+        "outcomes": ["Proliferation","Cell survival"], "restored": [],
+        "mechanism": "Next-gen ALK/ROS1/NTRK inhibitor — compact macrocyclic design",
+        "cascade_text": ["ALK/ROS1 compactly inhibited","→ RAS + PI3K suppressed","→ Proliferation reduced"],
+    },
+ 
+    # ── RET inhibitors ───────────────────────────────────────
+    "Selpercatinib": {
+        "color": "#534AB7", "targets": ["RET"],
+        "cascade": ["RAS","PI3K","AKT"],
+        "outcomes": ["Proliferation","Cell survival"], "restored": [],
+        "mechanism": "Selective RET inhibitor — FDA approved RET fusion+ NSCLC",
+        "cascade_text": ["RET fusion kinase blocked","→ RAS + PI3K suppressed","→ Proliferation + Survival reduced"],
+    },
+    "Pralsetinib": {
+        "color": "#534AB7", "targets": ["RET"],
+        "cascade": ["RAS","PI3K","AKT"],
+        "outcomes": ["Proliferation","Cell survival"], "restored": [],
+        "mechanism": "Selective RET inhibitor — FDA approved, potent CNS penetration",
+        "cascade_text": ["RET kinase selectively blocked","→ RAS/PI3K suppressed","→ Proliferation reduced"],
+    },
+    "Cabozantinib": {
+        "color": "#534AB7", "targets": ["RET","MET"],
+        "cascade": ["RAS","PI3K","AKT"],
+        "outcomes": ["Proliferation","Cell survival"], "restored": [],
+        "mechanism": "Multi-kinase inhibitor — RET/MET/VEGFR2",
+        "cascade_text": ["RET + MET + VEGFR2 blocked","→ Angiogenesis suppressed","→ RAS/PI3K reduced","→ Proliferation + Survival reduced"],
+    },
+ 
+    # ── NTRK inhibitors ──────────────────────────────────────
+    "Larotrectinib": {
+        "color": "#085041", "targets": ["NTRK"],
+        "cascade": ["RAS","PI3K","AKT"],
+        "outcomes": ["Proliferation","Cell survival"], "restored": [],
+        "mechanism": "Pan-TRK inhibitor — tumor-agnostic FDA approval",
+        "cascade_text": ["NTRK fusion kinase blocked","→ RAS / PI3K signaling drops","→ Proliferation + Survival reduced"],
+    },
+    "Entrectinib": {
+        "color": "#085041", "targets": ["NTRK"],
+        "cascade": ["RAS","PI3K","AKT"],
+        "outcomes": ["Proliferation","Cell survival"], "restored": [],
+        "mechanism": "Pan-TRK/ROS1/ALK inhibitor — CNS active",
+        "cascade_text": ["NTRK/ROS1/ALK blocked","→ RAS/PI3K suppressed","→ Proliferation reduced"],
+    },
+ 
+    # ── KRAS inhibitors ──────────────────────────────────────
     "Sotorasib": {
-        "color": "#854F0B",
-        "targets": ["RAS"],
-        "cascade": ["RAF", "MEK", "ERK"],
-        "outcomes": ["Proliferation"],
-        "restored": [],
+        "color": "#854F0B", "targets": ["RAS"],
+        "cascade": ["RAF","MEK","ERK"],
+        "outcomes": ["Proliferation"], "restored": [],
         "mechanism": "KRAS G12C covalent inhibitor — locks KRAS in inactive GDP state",
-        "cascade_text": [
-            "KRAS G12C locked in inactive state",
-            "→ RAF cannot be recruited",
-            "→ MEK / ERK cascade drops",
-            "→ Proliferation reduced",
-        ],
+        "cascade_text": ["KRAS G12C locked in inactive state","→ RAF cannot be recruited","→ MEK / ERK cascade drops","→ Proliferation reduced"],
+    },
+    "Adagrasib": {
+        "color": "#854F0B", "targets": ["RAS"],
+        "cascade": ["RAF","MEK","ERK"],
+        "outcomes": ["Proliferation"], "restored": [],
+        "mechanism": "KRAS G12C covalent inhibitor — longer half-life, CNS penetrant",
+        "cascade_text": ["KRAS G12C covalently bound","→ Inactive GDP-locked state","→ RAF/MEK/ERK suppressed","→ Proliferation reduced"],
+    },
+ 
+    # ── BRAF inhibitors ──────────────────────────────────────
+    "Dabrafenib": {
+        "color": "#7F77DD", "targets": ["RAF"],
+        "cascade": ["MEK","ERK"],
+        "outcomes": ["Proliferation"], "restored": [],
+        "mechanism": "BRAF V600E inhibitor — combine with MEK inhibitor to prevent bypass",
+        "cascade_text": ["BRAF V600E blocked","→ MEK / ERK suppressed","→ Proliferation reduced","(Use with MEK inhibitor to prevent RAS bypass)"],
+    },
+    "Vemurafenib": {
+        "color": "#7F77DD", "targets": ["RAF"],
+        "cascade": ["MEK","ERK"],
+        "outcomes": ["Proliferation"], "restored": [],
+        "mechanism": "BRAF V600E inhibitor — 1st-gen, paradoxical activation risk",
+        "cascade_text": ["BRAF V600E blocked","→ MEK/ERK suppressed","→ Proliferation reduced"],
+    },
+    "Encorafenib": {
+        "color": "#7F77DD", "targets": ["RAF"],
+        "cascade": ["MEK","ERK"],
+        "outcomes": ["Proliferation"], "restored": [],
+        "mechanism": "BRAF inhibitor — longer target residence time",
+        "cascade_text": ["BRAF blocked (long residence)","→ MEK/ERK suppressed","→ Proliferation reduced"],
     },
     "Dabrafenib+Trametinib": {
-        "color": "#7F77DD",
-        "targets": ["RAF", "MEK"],
+        "color": "#7F77DD", "targets": ["RAF","MEK"],
         "cascade": ["ERK"],
-        "outcomes": ["Proliferation"],
-        "restored": [],
-        "mechanism": "Dual BRAF+MEK inhibition — prevents RAS feedback bypass when BRAF alone used",
-        "cascade_text": [
-            "BRAF blocked (Dabrafenib)",
-            "+ MEK blocked (Trametinib)",
-            "→ No feedback bypass possible",
-            "→ ERK fully suppressed",
-            "→ Proliferation blocked",
-        ],
+        "outcomes": ["Proliferation"], "restored": [],
+        "mechanism": "Dual BRAF+MEK blockade — prevents RAS feedback bypass",
+        "cascade_text": ["BRAF blocked (Dabrafenib)","+ MEK blocked (Trametinib)","→ No feedback bypass possible","→ ERK fully suppressed","→ Proliferation blocked"],
     },
-    "Pembrolizumab": {
-        "color": "#BA7517",
-        "targets": ["T-cell"],
+ 
+    # ── MEK inhibitors ───────────────────────────────────────
+    "Trametinib": {
+        "color": "#633806", "targets": ["MEK"],
+        "cascade": ["ERK"],
+        "outcomes": ["Proliferation"], "restored": [],
+        "mechanism": "MEK1/2 inhibitor — blocks MAPK cascade downstream of RAS/RAF",
+        "cascade_text": ["MEK1/2 blocked","→ ERK phosphorylation drops","→ MAPK output suppressed","→ Proliferation reduced"],
+    },
+    "Cobimetinib": {
+        "color": "#633806", "targets": ["MEK"],
+        "cascade": ["ERK"],
+        "outcomes": ["Proliferation"], "restored": [],
+        "mechanism": "MEK1/2 inhibitor — used with Vemurafenib for BRAF V600E",
+        "cascade_text": ["MEK1/2 blocked","→ ERK suppressed","→ Proliferation reduced"],
+    },
+    "Binimetinib": {
+        "color": "#633806", "targets": ["MEK"],
+        "cascade": ["ERK"],
+        "outcomes": ["Proliferation"], "restored": [],
+        "mechanism": "MEK inhibitor — used with Encorafenib",
+        "cascade_text": ["MEK blocked","→ ERK suppressed","→ Proliferation reduced"],
+    },
+    "Selumetinib": {
+        "color": "#633806", "targets": ["MEK"],
+        "cascade": ["ERK"],
+        "outcomes": ["Proliferation"], "restored": [],
+        "mechanism": "MEK1/2 inhibitor — NF1-associated tumors",
+        "cascade_text": ["MEK1/2 blocked","→ ERK suppressed","→ Proliferation reduced"],
+    },
+ 
+    # ── CDK4/6 inhibitors ────────────────────────────────────
+    "Palbociclib": {
+        "color": "#3C3489", "targets": ["CDK4","CDK6"],
         "cascade": [],
-        "outcomes": ["Cell survival"],
-        "restored": ["Apoptosis"],
+        "outcomes": ["Proliferation"], "restored": [],
+        "mechanism": "CDK4/6 inhibitor — blocks cell cycle G1→S transition",
+        "cascade_text": ["CDK4/6 kinase blocked","→ RB remains unphosphorylated","→ G1 cell cycle arrest","→ Proliferation halted"],
+    },
+    "Ribociclib": {
+        "color": "#3C3489", "targets": ["CDK4","CDK6"],
+        "cascade": [],
+        "outcomes": ["Proliferation"], "restored": [],
+        "mechanism": "CDK4/6 inhibitor — selective G1 arrest",
+        "cascade_text": ["CDK4/6 blocked","→ G1 arrest induced","→ Proliferation halted"],
+    },
+    "Abemaciclib": {
+        "color": "#3C3489", "targets": ["CDK4","CDK6"],
+        "cascade": [],
+        "outcomes": ["Proliferation"], "restored": [],
+        "mechanism": "CDK4/6 inhibitor — continuous dosing, monotherapy active",
+        "cascade_text": ["CDK4/6 continuously blocked","→ G1 arrest","→ Proliferation halted"],
+    },
+ 
+    # ── PI3K/AKT/mTOR inhibitors ─────────────────────────────
+    "Alpelisib": {
+        "color": "#185FA5", "targets": ["PI3K"],
+        "cascade": ["AKT","mTOR"],
+        "outcomes": ["Cell survival","Proliferation"], "restored": [],
+        "mechanism": "PI3Kα-specific inhibitor — PIK3CA mutant tumors",
+        "cascade_text": ["PI3Kα blocked","→ AKT activation reduced","→ mTOR signaling drops","→ Cell survival + Proliferation reduced"],
+    },
+    "Capivasertib": {
+        "color": "#185FA5", "targets": ["AKT"],
+        "cascade": ["mTOR"],
+        "outcomes": ["Cell survival"], "restored": [],
+        "mechanism": "Pan-AKT inhibitor — AKT1/2/3 blockade",
+        "cascade_text": ["AKT kinase blocked","→ mTOR signaling suppressed","→ Cell survival pathway reduced"],
+    },
+    "Everolimus": {
+        "color": "#0C447C", "targets": ["mTOR"],
+        "cascade": ["AKT"],
+        "outcomes": ["Proliferation","Cell survival"], "restored": [],
+        "mechanism": "mTORC1 inhibitor (rapalog) — blocks protein synthesis and growth",
+        "cascade_text": ["mTORC1 blocked","→ S6K/4EBP1 suppressed","→ Protein synthesis halted","→ Proliferation + Survival reduced"],
+    },
+    "Temsirolimus": {
+        "color": "#0C447C", "targets": ["mTOR"],
+        "cascade": ["AKT"],
+        "outcomes": ["Proliferation","Cell survival"], "restored": [],
+        "mechanism": "mTORC1 inhibitor — IV formulation rapalog",
+        "cascade_text": ["mTORC1 blocked","→ Protein synthesis suppressed","→ Proliferation + Survival reduced"],
+    },
+    "Copanlisib": {
+        "color": "#185FA5", "targets": ["PI3K"],
+        "cascade": ["AKT","mTOR"],
+        "outcomes": ["Cell survival"], "restored": [],
+        "mechanism": "Pan-PI3K inhibitor — IV administration, α/δ isoform preference",
+        "cascade_text": ["PI3K (pan) blocked","→ AKT/mTOR suppressed","→ Cell survival reduced"],
+    },
+ 
+    # ── FGFR inhibitors ──────────────────────────────────────
+    "Erdafitinib": {
+        "color": "#3B6D11", "targets": ["FGFR1","FGFR2","FGFR3","FGFR4"],
+        "cascade": ["PI3K","RAS","AKT"],
+        "outcomes": ["Proliferation","Cell survival"], "restored": [],
+        "mechanism": "Pan-FGFR inhibitor — targets FGFR1-4 alterations",
+        "cascade_text": ["FGFR kinase blocked","→ PI3K + RAS signaling reduced","→ Proliferation + Survival suppressed"],
+    },
+    "Pemigatinib": {
+        "color": "#3B6D11", "targets": ["FGFR1","FGFR2","FGFR3"],
+        "cascade": ["PI3K","RAS","AKT"],
+        "outcomes": ["Proliferation","Cell survival"], "restored": [],
+        "mechanism": "Selective FGFR1/2/3 inhibitor",
+        "cascade_text": ["FGFR1/2/3 selectively blocked","→ PI3K/RAS suppressed","→ Proliferation + Survival reduced"],
+    },
+    "Futibatinib": {
+        "color": "#3B6D11", "targets": ["FGFR1","FGFR2","FGFR3","FGFR4"],
+        "cascade": ["PI3K","AKT"],
+        "outcomes": ["Proliferation","Cell survival"], "restored": [],
+        "mechanism": "Irreversible covalent pan-FGFR inhibitor",
+        "cascade_text": ["FGFR irreversibly blocked","→ PI3K/AKT suppressed","→ Proliferation reduced"],
+    },
+ 
+    # ── PARP inhibitors ──────────────────────────────────────
+    "Olaparib": {
+        "color": "#712B13", "targets": ["BRCA1","BRCA2","ATM"],
+        "cascade": [],
+        "outcomes": ["Proliferation"], "restored": ["Apoptosis"],
+        "mechanism": "PARP inhibitor — synthetic lethality in HRD tumors",
+        "cascade_text": ["PARP enzyme blocked","→ DNA single-strand breaks unrepaired","→ BRCA-deficient cells cannot repair","→ Synthetic lethality → tumor death"],
+    },
+    "Rucaparib": {
+        "color": "#712B13", "targets": ["BRCA1","BRCA2"],
+        "cascade": [],
+        "outcomes": ["Proliferation"], "restored": ["Apoptosis"],
+        "mechanism": "PARP1/2/3 inhibitor — BRCA mutant tumors",
+        "cascade_text": ["PARP blocked","→ DNA repair failure in HRD cells","→ Synthetic lethality","→ Tumor cell death"],
+    },
+    "Niraparib": {
+        "color": "#712B13", "targets": ["BRCA1","BRCA2"],
+        "cascade": [],
+        "outcomes": ["Proliferation"], "restored": ["Apoptosis"],
+        "mechanism": "PARP1/2 inhibitor — maintenance therapy, HRD tumors",
+        "cascade_text": ["PARP1/2 blocked","→ HRD cells cannot repair DNA","→ Synthetic lethality","→ Tumor death"],
+    },
+    "Talazoparib": {
+        "color": "#712B13", "targets": ["BRCA1","BRCA2"],
+        "cascade": [],
+        "outcomes": ["Proliferation"], "restored": ["Apoptosis"],
+        "mechanism": "Potent PARP inhibitor + PARP trapping",
+        "cascade_text": ["PARP trapped on DNA","→ Highly toxic to HRD cells","→ Synthetic lethality","→ Tumor death"],
+    },
+ 
+    # ── Immunotherapy ────────────────────────────────────────
+    "Pembrolizumab": {
+        "color": "#BA7517", "targets": ["T-cell"],
+        "cascade": [],
+        "outcomes": ["Cell survival"], "restored": ["Apoptosis"],
         "mechanism": "PD-1 checkpoint inhibitor — restores T-cell immune surveillance",
-        "cascade_text": [
-            "PD-1 checkpoint on T-cell blocked",
-            "→ T-cells re-activated",
-            "→ Tumor cells recognized",
-            "→ Immune-mediated apoptosis restored",
-        ],
+        "cascade_text": ["PD-1 on T-cell blocked","→ T-cells reactivated","→ Tumor cells recognized","→ Immune-mediated apoptosis restored"],
+    },
+    "Nivolumab": {
+        "color": "#BA7517", "targets": ["T-cell"],
+        "cascade": [],
+        "outcomes": ["Cell survival"], "restored": ["Apoptosis"],
+        "mechanism": "PD-1 checkpoint inhibitor — immune checkpoint blockade",
+        "cascade_text": ["PD-1 blocked","→ T-cell exhaustion reversed","→ Anti-tumor immunity restored","→ Tumor apoptosis induced"],
+    },
+    "Atezolizumab": {
+        "color": "#BA7517", "targets": ["T-cell"],
+        "cascade": [],
+        "outcomes": ["Cell survival"], "restored": ["Apoptosis"],
+        "mechanism": "PD-L1 inhibitor — blocks PD-L1 on tumor cells",
+        "cascade_text": ["PD-L1 on tumor blocked","→ T-cell inhibition removed","→ Anti-tumor immunity restored","→ Tumor apoptosis"],
+    },
+    "Durvalumab": {
+        "color": "#BA7517", "targets": ["T-cell"],
+        "cascade": [],
+        "outcomes": ["Cell survival"], "restored": ["Apoptosis"],
+        "mechanism": "PD-L1 inhibitor — approved for unresectable Stage III NSCLC",
+        "cascade_text": ["PD-L1 blocked","→ T-cells reactivated","→ Tumor killing restored"],
+    },
+    "Cemiplimab": {
+        "color": "#BA7517", "targets": ["T-cell"],
+        "cascade": [],
+        "outcomes": ["Cell survival"], "restored": ["Apoptosis"],
+        "mechanism": "PD-1 inhibitor — approved for NSCLC first line (PD-L1 ≥50%)",
+        "cascade_text": ["PD-1 blocked","→ T-cell immunity restored","→ Tumor apoptosis"],
+    },
+    "Avelumab": {
+        "color": "#BA7517", "targets": ["T-cell"],
+        "cascade": [],
+        "outcomes": ["Cell survival"], "restored": ["Apoptosis"],
+        "mechanism": "PD-L1 inhibitor — also activates ADCC",
+        "cascade_text": ["PD-L1 blocked","→ T-cells reactivated","→ ADCC killing added","→ Tumor death"],
+    },
+    "Ipilimumab": {
+        "color": "#633806", "targets": ["T-cell"],
+        "cascade": [],
+        "outcomes": ["Cell survival"], "restored": ["Apoptosis"],
+        "mechanism": "CTLA-4 inhibitor — activates T-cells at priming phase",
+        "cascade_text": ["CTLA-4 on T-cell blocked","→ T-cell activation amplified","→ Anti-tumor immunity boosted","→ Tumor apoptosis"],
+    },
+    "Tremelimumab": {
+        "color": "#633806", "targets": ["T-cell"],
+        "cascade": [],
+        "outcomes": ["Cell survival"], "restored": ["Apoptosis"],
+        "mechanism": "CTLA-4 inhibitor — used with Durvalumab (POSEIDON regimen)",
+        "cascade_text": ["CTLA-4 blocked","→ T-cell priming enhanced","→ Synergy with PD-L1 blockade","→ Tumor apoptosis"],
+    },
+ 
+    # ── HER2 targeted ────────────────────────────────────────
+    "Trastuzumab Deruxtecan": {
+        "color": "#A32D2D", "targets": ["ERBB2"],
+        "cascade": ["PI3K","RAS","AKT"],
+        "outcomes": ["Proliferation","Cell survival"], "restored": ["Apoptosis"],
+        "mechanism": "HER2-directed ADC — delivers topoisomerase inhibitor payload",
+        "cascade_text": ["HER2 targeted by antibody","→ Drug payload delivered intracellularly","→ Topoisomerase I inhibited","→ DNA damage → tumor death"],
+    },
+    "Neratinib": {
+        "color": "#A32D2D", "targets": ["ERBB2"],
+        "cascade": ["RAS","PI3K","AKT"],
+        "outcomes": ["Proliferation","Cell survival"], "restored": [],
+        "mechanism": "Irreversible pan-HER TKI — HER2 mutant NSCLC",
+        "cascade_text": ["HER2 irreversibly blocked","→ RAS/PI3K suppressed","→ Proliferation + Survival reduced"],
+    },
+ 
+    # ── MDM2 inhibitors ──────────────────────────────────────
+    "Idasanutlin": {
+        "color": "#5F5E5A", "targets": ["MDM2"],
+        "cascade": ["TP53"],
+        "outcomes": ["Proliferation"], "restored": ["Apoptosis"],
+        "mechanism": "MDM2 inhibitor — restores TP53 function by blocking MDM2-TP53 interaction",
+        "cascade_text": ["MDM2-TP53 interaction blocked","→ TP53 no longer degraded","→ TP53 function restored","→ Apoptosis re-enabled"],
+    },
+ 
+    # ── Chemotherapy ─────────────────────────────────────────
+    "Paclitaxel": {
+        "color": "#888780", "targets": [],
+        "cascade": [],
+        "outcomes": ["Proliferation"], "restored": ["Apoptosis"],
+        "mechanism": "Taxane — stabilizes microtubules, blocks mitosis",
+        "cascade_text": ["Microtubules stabilized","→ Mitotic spindle cannot depolymerize","→ Cell division blocked","→ Apoptosis induced"],
+    },
+    "Carboplatin": {
+        "color": "#888780", "targets": [],
+        "cascade": [],
+        "outcomes": ["Proliferation"], "restored": ["Apoptosis"],
+        "mechanism": "Platinum agent — crosslinks DNA, blocks replication",
+        "cascade_text": ["DNA crosslinks formed","→ Replication blocked","→ Apoptosis induced"],
+    },
+    "Cisplatin": {
+        "color": "#888780", "targets": [],
+        "cascade": [],
+        "outcomes": ["Proliferation"], "restored": ["Apoptosis"],
+        "mechanism": "Platinum agent — DNA adduct formation",
+        "cascade_text": ["DNA adducts formed","→ DNA replication blocked","→ Apoptosis induced"],
+    },
+    "Pemetrexed": {
+        "color": "#888780", "targets": [],
+        "cascade": [],
+        "outcomes": ["Proliferation"], "restored": [],
+        "mechanism": "Antifolate — inhibits thymidylate synthase, preferred in adenocarcinoma",
+        "cascade_text": ["Folate metabolism blocked","→ DNA synthesis impaired","→ Proliferation reduced"],
+    },
+    "Bevacizumab": {
+        "color": "#888780", "targets": [],
+        "cascade": [],
+        "outcomes": ["Proliferation","Cell survival"], "restored": [],
+        "mechanism": "Anti-VEGF antibody — blocks angiogenesis",
+        "cascade_text": ["VEGF-A neutralized","→ Tumor angiogenesis blocked","→ Tumor nutrient supply cut","→ Proliferation + Survival reduced"],
+    },
+    "Tazemetostat": {
+        "color": "#5F5E5A", "targets": ["MDM2"],
+        "cascade": [],
+        "outcomes": ["Proliferation"], "restored": [],
+        "mechanism": "EZH2 inhibitor — epigenetic therapy for ARID1A/SMARCA4 mutant tumors",
+        "cascade_text": ["EZH2 methyltransferase blocked","→ H3K27me3 reduced","→ Tumor suppressor genes re-expressed","→ Proliferation reduced"],
     },
 }
 
-
-def build_cytoscape_elements(mutations_with_oncokb: list[dict]) -> tuple[list, list]:
+def build_cytoscape_elements(mutations_with_oncokb: list) -> tuple:
     """
-    รับ mutation list → คืน (nodes, edges) สำหรับ Cytoscape
-    mutated genes จะถูก mark type='mutated'
+    แสดงแค่ชื่อ gene บน node diagram
+    ข้อมูล alteration/VAF แสดงที่ panel ขวามือแทน
     """
     mutated_genes = {m["gene"].upper() for m in mutations_with_oncokb}
-
+ 
     nodes = []
     for node_id, label, node_type, _ in PATHWAY_NODES:
         actual_type = "mutated" if node_id in mutated_genes else node_type
-        # หา VAF ถ้าเป็น mutated
-        vaf_str = ""
-        for m in mutations_with_oncokb:
-            if m["gene"].upper() == node_id:
-                vaf_val = m.get("vaf", "")
-                alt = m.get("alteration", "")
-                vaf_str = f"{alt}"
-                if vaf_val:
-                    vaf_str += f"\\nVAF {vaf_val}"
-                break
-
-        display_label = f"{node_id}\\n{vaf_str}" if vaf_str else label.replace("\n", "\\n")
+ 
+        # ── แสดงแค่ชื่อ gene — ไม่มี alteration/VAF ──────────
+        display_label = label.replace("\n", "\\n")
+ 
         nodes.append({
             "data": {
                 "id": node_id,
@@ -212,7 +563,7 @@ def build_cytoscape_elements(mutations_with_oncokb: list[dict]) -> tuple[list, l
                 "isMutated": node_id in mutated_genes,
             }
         })
-
+ 
     edges = []
     for i, (src, tgt, edge_type) in enumerate(PATHWAY_EDGES):
         edges.append({
@@ -220,10 +571,11 @@ def build_cytoscape_elements(mutations_with_oncokb: list[dict]) -> tuple[list, l
                 "id": f"e{i}",
                 "source": src,
                 "target": tgt,
-                "label": edge_type if edge_type in ("degrades", "induces", "immune kill") else "",
+                "label": edge_type if edge_type in (
+                    "degrades", "induces", "immune kill") else "",
             }
         })
-
+ 
     return nodes, edges
 
 
