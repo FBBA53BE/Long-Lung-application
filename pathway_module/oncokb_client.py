@@ -662,6 +662,289 @@ LOCAL_DB = {
         ],
         "description": "TP53 — drug interactions from DGIdb (anti-neoplastic, lung cancer relevant)",
     },
+    # เพิ่มใน LOCAL_DB dict ใน oncokb_client.py
+
+    # ── RTK Fusions ──────────────────────────────────────────
+    ("ROS1", "Fusion"): {
+        "oncogenicity": "Oncogenic",
+        "mutationEffect": "Gain-of-function",
+        "highestSensitiveLevel": "LEVEL_1",
+        "treatments": [
+            {"drugs": [{"drugName": "Crizotinib"}],    "level": "LEVEL_1", "pmids": [], "approvedIndications": ["ROS1+ NSCLC"]},
+            {"drugs": [{"drugName": "Lorlatinib"}],    "level": "LEVEL_1", "pmids": [], "approvedIndications": ["ROS1+ NSCLC"]},
+            {"drugs": [{"drugName": "Repotrectinib"}], "level": "LEVEL_1", "pmids": [], "approvedIndications": ["ROS1+ NSCLC"]},
+        ],
+        "description": "ROS1 fusions in ~2% NSCLC. Highly sensitive to ROS1 inhibitors.",
+    },
+    ("RET", "Fusion"): {
+        "oncogenicity": "Oncogenic",
+        "mutationEffect": "Gain-of-function",
+        "highestSensitiveLevel": "LEVEL_1",
+        "treatments": [
+            {"drugs": [{"drugName": "Selpercatinib"}], "level": "LEVEL_1", "pmids": [], "approvedIndications": ["RET fusion+ NSCLC"]},
+            {"drugs": [{"drugName": "Pralsetinib"}],   "level": "LEVEL_1", "pmids": [], "approvedIndications": ["RET fusion+ NSCLC"]},
+        ],
+        "description": "RET fusions in ~2% NSCLC. Selective RET inhibitors highly effective.",
+    },
+    ("NTRK1", "Fusion"): {
+        "oncogenicity": "Oncogenic",
+        "mutationEffect": "Gain-of-function",
+        "highestSensitiveLevel": "LEVEL_1",
+        "treatments": [
+            {"drugs": [{"drugName": "Larotrectinib"}], "level": "LEVEL_1", "pmids": [], "approvedIndications": ["NTRK fusion+ solid tumors"]},
+            {"drugs": [{"drugName": "Entrectinib"}],   "level": "LEVEL_1", "pmids": [], "approvedIndications": ["NTRK fusion+ solid tumors"]},
+        ],
+        "description": "NTRK fusions — tumor-agnostic approval for TRK inhibitors.",
+    },
+    ("NTRK2", "Fusion"): {
+        "oncogenicity": "Oncogenic",
+        "mutationEffect": "Gain-of-function",
+        "highestSensitiveLevel": "LEVEL_1",
+        "treatments": [
+            {"drugs": [{"drugName": "Larotrectinib"}], "level": "LEVEL_1", "pmids": [], "approvedIndications": ["NTRK fusion+ solid tumors"]},
+            {"drugs": [{"drugName": "Entrectinib"}],   "level": "LEVEL_1", "pmids": [], "approvedIndications": ["NTRK fusion+ solid tumors"]},
+        ],
+        "description": "NTRK2 fusion — same TRK inhibitor coverage as NTRK1.",
+    },
+    ("NTRK3", "Fusion"): {
+        "oncogenicity": "Oncogenic",
+        "mutationEffect": "Gain-of-function",
+        "highestSensitiveLevel": "LEVEL_1",
+        "treatments": [
+            {"drugs": [{"drugName": "Larotrectinib"}], "level": "LEVEL_1", "pmids": [], "approvedIndications": ["NTRK fusion+ solid tumors"]},
+            {"drugs": [{"drugName": "Entrectinib"}],   "level": "LEVEL_1", "pmids": [], "approvedIndications": ["NTRK fusion+ solid tumors"]},
+        ],
+        "description": "NTRK3 fusion — tumor-agnostic TRK inhibitor indication.",
+    },
+
+    # ── PI3K/AKT/mTOR pathway ────────────────────────────────
+    ("PIK3CA", "any"): {
+        "oncogenicity": "Oncogenic",
+        "mutationEffect": "Gain-of-function",
+        "highestSensitiveLevel": "LEVEL_2",
+        "treatments": [
+            {"drugs": [{"drugName": "Alpelisib"}],    "level": "LEVEL_2", "pmids": [], "approvedIndications": ["PIK3CA mutant"]},
+            {"drugs": [{"drugName": "Capivasertib"}], "level": "LEVEL_2", "pmids": [], "approvedIndications": ["PIK3CA mutant"]},
+            {"drugs": [{"drugName": "Everolimus"}],   "level": "LEVEL_2", "pmids": [], "approvedIndications": ["mTOR pathway"]},
+        ],
+        "description": "PIK3CA mutations activate PI3K/AKT/mTOR survival pathway.",
+    },
+    ("PTEN", "any"): {
+        "oncogenicity": "Oncogenic",
+        "mutationEffect": "Loss-of-function",
+        "highestSensitiveLevel": "LEVEL_2",
+        "treatments": [
+            {"drugs": [{"drugName": "Capivasertib"}], "level": "LEVEL_2", "pmids": [], "approvedIndications": ["PTEN loss"]},
+            {"drugs": [{"drugName": "Everolimus"}],   "level": "LEVEL_2", "pmids": [], "approvedIndications": ["mTOR pathway"]},
+        ],
+        "description": "PTEN loss activates PI3K/AKT. Sensitizes to AKT/mTOR inhibitors.",
+    },
+    ("MTOR", "any"): {
+        "oncogenicity": "Oncogenic",
+        "mutationEffect": "Gain-of-function",
+        "highestSensitiveLevel": "LEVEL_2",
+        "treatments": [
+            {"drugs": [{"drugName": "Everolimus"}],   "level": "LEVEL_2", "pmids": [], "approvedIndications": ["mTOR mutant"]},
+            {"drugs": [{"drugName": "Temsirolimus"}], "level": "LEVEL_2", "pmids": [], "approvedIndications": ["mTOR mutant"]},
+        ],
+        "description": "mTOR activating mutations — rapalog sensitivity.",
+    },
+    ("AKT1", "any"): {
+        "oncogenicity": "Oncogenic",
+        "mutationEffect": "Gain-of-function",
+        "highestSensitiveLevel": "LEVEL_2",
+        "treatments": [
+            {"drugs": [{"drugName": "Capivasertib"}], "level": "LEVEL_2", "pmids": [], "approvedIndications": ["AKT1 mutant"]},
+            {"drugs": [{"drugName": "Ipatasertib"}],  "level": "LEVEL_3A", "pmids": [], "approvedIndications": []},
+        ],
+        "description": "AKT1 E17K — activating mutation, AKT inhibitor sensitive.",
+    },
+
+    # ── FGFR pathway ─────────────────────────────────────────
+    ("FGFR1", "any"): {
+        "oncogenicity": "Oncogenic",
+        "mutationEffect": "Gain-of-function",
+        "highestSensitiveLevel": "LEVEL_2",
+        "treatments": [
+            {"drugs": [{"drugName": "Erdafitinib"}],  "level": "LEVEL_2", "pmids": [], "approvedIndications": ["FGFR altered"]},
+            {"drugs": [{"drugName": "Pemigatinib"}],  "level": "LEVEL_2", "pmids": [], "approvedIndications": ["FGFR altered"]},
+            {"drugs": [{"drugName": "Futibatinib"}],  "level": "LEVEL_2", "pmids": [], "approvedIndications": ["FGFR altered"]},
+        ],
+        "description": "FGFR1 amplification common in squamous cell lung cancer (~20%).",
+    },
+    ("FGFR2", "any"): {
+        "oncogenicity": "Oncogenic",
+        "mutationEffect": "Gain-of-function",
+        "highestSensitiveLevel": "LEVEL_2",
+        "treatments": [
+            {"drugs": [{"drugName": "Pemigatinib"}],  "level": "LEVEL_2", "pmids": [], "approvedIndications": ["FGFR altered"]},
+            {"drugs": [{"drugName": "Erdafitinib"}],  "level": "LEVEL_2", "pmids": [], "approvedIndications": ["FGFR altered"]},
+        ],
+        "description": "FGFR2 fusions/mutations — pan-FGFR inhibitor coverage.",
+    },
+    ("FGFR3", "any"): {
+        "oncogenicity": "Oncogenic",
+        "mutationEffect": "Gain-of-function",
+        "highestSensitiveLevel": "LEVEL_2",
+        "treatments": [
+            {"drugs": [{"drugName": "Erdafitinib"}],  "level": "LEVEL_2", "pmids": [], "approvedIndications": ["FGFR altered"]},
+            {"drugs": [{"drugName": "Infigratinib"}], "level": "LEVEL_3A", "pmids": [], "approvedIndications": []},
+        ],
+        "description": "FGFR3 mutations/fusions — FGFR inhibitor sensitive.",
+    },
+
+    # ── DNA Repair ───────────────────────────────────────────
+    ("BRCA2", "any"): {
+        "oncogenicity": "Oncogenic",
+        "mutationEffect": "Loss-of-function",
+        "highestSensitiveLevel": "LEVEL_1",
+        "treatments": [
+            {"drugs": [{"drugName": "Olaparib"}],   "level": "LEVEL_1", "pmids": [], "approvedIndications": ["BRCA mutant"]},
+            {"drugs": [{"drugName": "Rucaparib"}],  "level": "LEVEL_1", "pmids": [], "approvedIndications": ["BRCA mutant"]},
+            {"drugs": [{"drugName": "Niraparib"}],  "level": "LEVEL_1", "pmids": [], "approvedIndications": ["BRCA mutant"]},
+        ],
+        "description": "BRCA2 loss causes HRD — PARP inhibitors highly effective.",
+    },
+    ("ATM", "any"): {
+        "oncogenicity": "Oncogenic",
+        "mutationEffect": "Loss-of-function",
+        "highestSensitiveLevel": "LEVEL_2",
+        "treatments": [
+            {"drugs": [{"drugName": "Olaparib"}],    "level": "LEVEL_2", "pmids": [], "approvedIndications": ["ATM mutant"]},
+            {"drugs": [{"drugName": "Durvalumab"}],  "level": "LEVEL_2", "pmids": [], "approvedIndications": ["ATM mutant"]},
+        ],
+        "description": "ATM loss — HRD phenotype, PARP inhibitor and immunotherapy benefit.",
+    },
+    ("POLE", "any"): {
+        "oncogenicity": "Oncogenic",
+        "mutationEffect": "Gain-of-function",
+        "highestSensitiveLevel": "LEVEL_1",
+        "treatments": [
+            {"drugs": [{"drugName": "Pembrolizumab"}], "level": "LEVEL_1", "pmids": [], "approvedIndications": ["TMB-High/MSI-H"]},
+            {"drugs": [{"drugName": "Nivolumab"}],     "level": "LEVEL_1", "pmids": [], "approvedIndications": ["TMB-High"]},
+        ],
+        "description": "POLE mutations → ultra-high TMB → exceptional immunotherapy response.",
+    },
+
+    # ── Immune checkpoint ────────────────────────────────────
+    ("CD274", "any"): {
+        "oncogenicity": "Oncogenic",
+        "mutationEffect": "Gain-of-function",
+        "highestSensitiveLevel": "LEVEL_1",
+        "treatments": [
+            {"drugs": [{"drugName": "Pembrolizumab"}], "level": "LEVEL_1", "pmids": [], "approvedIndications": ["PD-L1+ NSCLC"]},
+            {"drugs": [{"drugName": "Atezolizumab"}],  "level": "LEVEL_1", "pmids": [], "approvedIndications": ["PD-L1+ NSCLC"]},
+            {"drugs": [{"drugName": "Durvalumab"}],    "level": "LEVEL_1", "pmids": [], "approvedIndications": ["PD-L1+ NSCLC"]},
+        ],
+        "description": "PD-L1 overexpression — checkpoint inhibitor first line.",
+    },
+    ("PDCD1", "any"): {
+        "oncogenicity": "Oncogenic",
+        "mutationEffect": "Gain-of-function",
+        "highestSensitiveLevel": "LEVEL_1",
+        "treatments": [
+            {"drugs": [{"drugName": "Pembrolizumab"}], "level": "LEVEL_1", "pmids": [], "approvedIndications": ["NSCLC"]},
+            {"drugs": [{"drugName": "Nivolumab"}],     "level": "LEVEL_1", "pmids": [], "approvedIndications": ["NSCLC"]},
+            {"drugs": [{"drugName": "Cemiplimab-Rwlc"}],"level": "LEVEL_1", "pmids": [], "approvedIndications": ["NSCLC"]},
+        ],
+        "description": "PD-1 pathway — checkpoint inhibitor sensitive.",
+    },
+
+    # ── Cell cycle ───────────────────────────────────────────
+    ("CDK4", "any"): {
+        "oncogenicity": "Oncogenic",
+        "mutationEffect": "Gain-of-function",
+        "highestSensitiveLevel": "LEVEL_2",
+        "treatments": [
+            {"drugs": [{"drugName": "Palbociclib"}],  "level": "LEVEL_2", "pmids": [], "approvedIndications": ["CDK4/6 amplified"]},
+            {"drugs": [{"drugName": "Ribociclib"}],   "level": "LEVEL_2", "pmids": [], "approvedIndications": ["CDK4/6 amplified"]},
+            {"drugs": [{"drugName": "Abemaciclib"}],  "level": "LEVEL_2", "pmids": [], "approvedIndications": ["CDK4/6 amplified"]},
+        ],
+        "description": "CDK4 amplification — CDK4/6 inhibitor sensitive.",
+    },
+    ("CDK6", "any"): {
+        "oncogenicity": "Oncogenic",
+        "mutationEffect": "Gain-of-function",
+        "highestSensitiveLevel": "LEVEL_2",
+        "treatments": [
+            {"drugs": [{"drugName": "Palbociclib"}],  "level": "LEVEL_2", "pmids": [], "approvedIndications": ["CDK4/6 amplified"]},
+            {"drugs": [{"drugName": "Abemaciclib"}],  "level": "LEVEL_2", "pmids": [], "approvedIndications": ["CDK4/6 amplified"]},
+        ],
+        "description": "CDK6 amplification — CDK4/6 inhibitor coverage.",
+    },
+    ("CDKN2A", "any"): {
+        "oncogenicity": "Oncogenic",
+        "mutationEffect": "Loss-of-function",
+        "highestSensitiveLevel": "LEVEL_2",
+        "treatments": [
+            {"drugs": [{"drugName": "Palbociclib"}],  "level": "LEVEL_2", "pmids": [], "approvedIndications": ["CDKN2A loss"]},
+            {"drugs": [{"drugName": "Abemaciclib"}],  "level": "LEVEL_2", "pmids": [], "approvedIndications": ["CDKN2A loss"]},
+        ],
+        "description": "CDKN2A loss releases CDK4/6 — CDK inhibitors restore cell cycle control.",
+    },
+
+    # ── Other MAPK ───────────────────────────────────────────
+    ("MAP2K1", "any"): {
+        "oncogenicity": "Oncogenic",
+        "mutationEffect": "Gain-of-function",
+        "highestSensitiveLevel": "LEVEL_2",
+        "treatments": [
+            {"drugs": [{"drugName": "Trametinib"}],   "level": "LEVEL_2", "pmids": [], "approvedIndications": ["MEK mutant"]},
+            {"drugs": [{"drugName": "Cobimetinib"}],  "level": "LEVEL_2", "pmids": [], "approvedIndications": ["MEK mutant"]},
+            {"drugs": [{"drugName": "Selumetinib"}],  "level": "LEVEL_2", "pmids": [], "approvedIndications": ["MEK mutant"]},
+        ],
+        "description": "MAP2K1 (MEK1) mutations — MEK inhibitor sensitive.",
+    },
+    ("NF1", "any"): {
+        "oncogenicity": "Oncogenic",
+        "mutationEffect": "Loss-of-function",
+        "highestSensitiveLevel": "LEVEL_2",
+        "treatments": [
+            {"drugs": [{"drugName": "Trametinib"}],  "level": "LEVEL_2", "pmids": [], "approvedIndications": ["NF1 loss"]},
+            {"drugs": [{"drugName": "Everolimus"}],  "level": "LEVEL_2", "pmids": [], "approvedIndications": ["NF1 loss"]},
+        ],
+        "description": "NF1 loss activates RAS — MEK inhibitors and mTOR inhibitors relevant.",
+    },
+    ("ERBB2", "any"): {
+        "oncogenicity": "Oncogenic",
+        "mutationEffect": "Gain-of-function",
+        "highestSensitiveLevel": "LEVEL_1",
+        "treatments": [
+            {"drugs": [{"drugName": "Trastuzumab Deruxtecan"}], "level": "LEVEL_1", "pmids": [], "approvedIndications": ["HER2 mutant NSCLC"]},
+            {"drugs": [{"drugName": "Neratinib"}],   "level": "LEVEL_2", "pmids": [], "approvedIndications": ["HER2 mutant"]},
+            {"drugs": [{"drugName": "Afatinib"}],    "level": "LEVEL_2", "pmids": [], "approvedIndications": ["HER2 mutant NSCLC"]},
+        ],
+        "description": "ERBB2 (HER2) mutations in ~3% NSCLC — T-DXd now FDA approved.",
+    },
+    ("STK11", "any"): {
+        "oncogenicity": "Oncogenic",
+        "mutationEffect": "Loss-of-function",
+        "highestSensitiveLevel": "LEVEL_3A",
+        "treatments": [
+            {"drugs": [{"drugName": "Everolimus"}],      "level": "LEVEL_3A", "pmids": [], "approvedIndications": []},
+            {"drugs": [{"drugName": "Pembrolizumab"}],   "level": "LEVEL_3A", "pmids": [], "approvedIndications": []},
+        ],
+        "description": "STK11 loss — associated with immunotherapy resistance. mTOR pathway activated.",
+    },
+    ("KEAP1", "any"): {
+        "oncogenicity": "Oncogenic",
+        "mutationEffect": "Loss-of-function",
+        "highestSensitiveLevel": "LEVEL_3A",
+        "treatments": [
+            {"drugs": [{"drugName": "Osimertinib"}],   "level": "LEVEL_3A", "pmids": [], "approvedIndications": []},
+        ],
+        "description": "KEAP1 mutations — associated with poor prognosis and resistance to EGFR TKI.",
+    },
+    ("MDM2", "any"): {
+        "oncogenicity": "Oncogenic",
+        "mutationEffect": "Gain-of-function",
+        "highestSensitiveLevel": "LEVEL_3A",
+        "treatments": [
+            {"drugs": [{"drugName": "Idasanutlin"}],     "level": "LEVEL_3A", "pmids": [], "approvedIndications": []},
+            {"drugs": [{"drugName": "Pembrolizumab"}],   "level": "LEVEL_3A", "pmids": [], "approvedIndications": []},
+        ],
+        "description": "MDM2 amplification degrades TP53 — MDM2 inhibitors restore p53 function.",
+    },
 }
 
 LEVEL_COLORS = {
