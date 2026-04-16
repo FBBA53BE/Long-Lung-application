@@ -17,8 +17,9 @@ import os
 
 sys.path.append(os.path.dirname(__file__))
 # ใหม่ (ถูก)
-from pathway_module.oncokb_client import query_all_mutations, LEVEL_LABELS, LEVEL_COLORS
-from pathway_module.pathway_viewer import generate_pathway_html
+# แก้บรรทัด 19-20 เป็น
+from .oncokb_client import query_all_mutations, LEVEL_LABELS, LEVEL_COLORS
+from .pathway_viewer import generate_pathway_html
 # ─── ตัวอย่าง preset mutations ต่อ cancer type ───────────────────────────────
 PRESETS = {
     "Adenocarcinoma": [
