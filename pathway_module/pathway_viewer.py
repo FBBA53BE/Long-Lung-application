@@ -553,8 +553,7 @@ def build_cytoscape_elements(mutations_with_oncokb: list) -> tuple:
         actual_type = "mutated" if node_id in mutated_genes else node_type
  
         # ── แสดงแค่ชื่อ gene — ไม่มี alteration/VAF ──────────
-        display_label = label.replace("\n", "\\n")
- 
+        display_label = node_id
         nodes.append({
             "data": {
                 "id": node_id,
