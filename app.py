@@ -410,23 +410,23 @@ if uploaded:
         render_pathway_section(cancer_type=pred_class)
 
     if is_cancer and "enriched_mutations" in st.session_state:
-    pdf_bytes = generate_report_pdf(
-        patient_info=st.session_state.get("patient_info", {}),
-        pred_class=pred_class,
-        confidence=confidence,
-        probs=dict(zip(USE_CLASSES, probs)),
-        enriched_mutations=st.session_state["enriched_mutations"],
-        ct_img_bytes=ct_bytes,
-        heatmap_bytes=heatmap_bytes,
-        seg_bytes=seg_bytes,
-    )
-    st.download_button(
-        label="📥 Download Full Report (PDF)",
-        data=pdf_bytes,
-        file_name=f"longling_report_{datetime.now().strftime('%Y%m%d')}.pdf",
-        mime="application/pdf",
-        type="primary",
-    )
+        pdf_bytes = generate_report_pdf(
+            patient_info=st.session_state.get("patient_info", {}),
+            pred_class=pred_class,
+            confidence=confidence,
+            probs=dict(zip(USE_CLASSES, probs)),
+            enriched_mutations=st.session_state["enriched_mutations"],
+            ct_img_bytes=ct_bytes,
+            heatmap_bytes=heatmap_bytes,
+            seg_bytes=seg_bytes,
+        )
+        st.download_button(
+            label="📥 Download Full Report (PDF)",
+            data=pdf_bytes,
+            file_name=f"longling_report_{datetime.now().strftime('%Y%m%d')}.pdf",
+            mime="application/pdf",
+            type="primary",
+        )
 # ── Footer ────────────────────────────────────────────────────
 st.markdown("""
 <div class="footer">
