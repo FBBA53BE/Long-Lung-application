@@ -328,14 +328,15 @@ if uploaded:
     heatmap = make_gradcam(arr, effnet_model)
     overlay = overlay_gradcam(img_resized, heatmap) if heatmap is not None else None
 
-    ct_bytes      = img_to_bytes(img_resized)
-    heatmap_bytes = img_to_bytes(overlay) if overlay is not None else None
-    seg_bytes     = img_to_bytes(seg_overlay) if seg_overlay is not None else None
-
+ 
     seg_overlay = None
     if pred_class in CANCER_CLASSES and unet_model is not None:
         mask        = segment_unet(img_resized, unet_model)
         seg_overlay = overlay_mask(img_resized, mask)
+        
+    ct_bytes      = img_to_bytes(img_resized)
+    heatmap_bytes = img_to_bytes(overlay) if overlay is not None else None
+    seg_bytes     = img_to_bytes(seg_overlay) if seg_overlay is not None else None
 
     proc.empty()
 
