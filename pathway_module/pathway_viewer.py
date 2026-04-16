@@ -539,6 +539,34 @@ DRUG_EFFECTS = {
         "mechanism": "EZH2 inhibitor — epigenetic therapy for ARID1A/SMARCA4 mutant tumors",
         "cascade_text": ["EZH2 methyltransferase blocked","→ H3K27me3 reduced","→ Tumor suppressor genes re-expressed","→ Proliferation reduced"],
     },
+      "Bendamustine": {
+        "color": "#888780", "targets": [],
+        "cascade": [],
+        "outcomes": ["Proliferation"], "restored": ["Apoptosis"],
+        "mechanism": "Alkylating agent — DNA crosslinks, used in hematologic cancers",
+        "cascade_text": ["DNA crosslinks formed","→ Replication blocked","→ Apoptosis induced"],
+    },
+    "Selinexor": {
+        "color": "#5F5E5A", "targets": ["TP53"],
+        "cascade": [],
+        "outcomes": ["Proliferation"], "restored": ["Apoptosis"],
+        "mechanism": "XPO1 inhibitor — traps TP53 in nucleus, restores tumor suppressor function",
+        "cascade_text": ["XPO1 nuclear export blocked","→ TP53 retained in nucleus","→ TP53 transcriptional activity restored","→ Apoptosis re-enabled"],
+    },
+    "Alemtuzumab": {
+        "color": "#888780", "targets": [],
+        "cascade": [],
+        "outcomes": ["Cell survival"], "restored": ["Apoptosis"],
+        "mechanism": "Anti-CD52 monoclonal antibody — hematologic malignancies",
+        "cascade_text": ["CD52 on lymphocytes targeted","→ ADCC + CDC killing","→ Tumor cell death"],
+    },
+    "Trabectedin": {
+        "color": "#888780", "targets": [],
+        "cascade": [],
+        "outcomes": ["Proliferation"], "restored": ["Apoptosis"],
+        "mechanism": "DNA minor groove binder — disrupts transcription factor binding",
+        "cascade_text": ["DNA minor groove bound","→ Transcription factor binding blocked","→ DNA repair pathway hijacked","→ Apoptosis induced"],
+    },
 }
 
 def build_cytoscape_elements(mutations_with_oncokb: list) -> tuple:
@@ -577,12 +605,7 @@ def build_cytoscape_elements(mutations_with_oncokb: list) -> tuple:
  
     return nodes, edges
 
-
 def build_drug_buttons(mutations_with_oncokb: list[dict]) -> list[dict]:
-    """
-    ดึงยาที่แนะนำจาก mutation list → สร้าง drug button list
-    เรียงตาม evidence level
-    """
     seen = {}
     for mut in mutations_with_oncokb:
         oncokb = mut.get("oncokb", {})
@@ -590,24 +613,28 @@ def build_drug_buttons(mutations_with_oncokb: list[dict]) -> list[dict]:
             drug_names = "+".join(d["drugName"] for d in tx.get("drugs", []))
             level = tx.get("level", "LEVEL_4")
             if drug_names not in seen:
+                # ── normalize: Title Case ──────────────────────
+                drug_display = drug_names.title()
+                effects = DRUG_EFFECTS.get(drug_display) or \
+                          DRUG_EFFECTS.get(drug_names) or \
+                          DRUG_EFFECTS.get(drug_names.upper()) or {
+                              "color": "#888780",
+                              "targets": [],
+                              "cascade": [],
+                              "outcomes": [],
+                              "restored": [],
+                              "mechanism": f"Targets {mut['gene']} — see OncoKB for details",
+                              "cascade_text": [],
+                          }
                 seen[drug_names] = {
-                    "name": drug_names,
+                    "name": drug_display,
                     "level": level,
                     "gene": mut["gene"],
-                    "effects": DRUG_EFFECTS.get(drug_names, {
-                        "color": "#888780",
-                        "targets": [],
-                        "cascade": [],
-                        "outcomes": [],
-                        "restored": [],
-                        "mechanism": f"Targets {mut['gene']} — see OncoKB for details",
-                        "cascade_text": [],
-                    }),
+                    "effects": effects,
                 }
-
-    # เรียง LEVEL_1 ก่อน
-    level_order = {"LEVEL_1": 0, "LEVEL_2": 1, "LEVEL_3A": 2, "LEVEL_3B": 3, "LEVEL_4": 4}
+    level_order = {"LEVEL_1":0,"LEVEL_2":1,"LEVEL_3A":2,"LEVEL_3B":3,"LEVEL_4":4}
     return sorted(seen.values(), key=lambda x: level_order.get(x["level"], 99))
+
 
 
 def generate_pathway_html(mutations_with_oncokb: list[dict], patient_info: dict) -> str:
