@@ -245,9 +245,7 @@ def img_to_bytes(arr_or_img):
         arr_or_img.save(buf, format="PNG")
     return buf.getvalue()
 
-ct_bytes      = img_to_bytes(img_resized)
-heatmap_bytes = img_to_bytes(overlay) if overlay is not None else None
-seg_bytes     = img_to_bytes(seg_overlay) if seg_overlay is not None else None
+
 def segment_unet(img: Image.Image, unet):
     arr = np.array(img.resize((256, 256)), dtype=np.float32)
     if arr.ndim == 2:
@@ -329,6 +327,10 @@ if uploaded:
 
     heatmap = make_gradcam(arr, effnet_model)
     overlay = overlay_gradcam(img_resized, heatmap) if heatmap is not None else None
+
+    ct_bytes      = img_to_bytes(img_resized)
+    heatmap_bytes = img_to_bytes(overlay) if overlay is not None else None
+    seg_bytes     = img_to_bytes(seg_overlay) if seg_overlay is not None else None
 
     seg_overlay = None
     if pred_class in CANCER_CLASSES and unet_model is not None:
