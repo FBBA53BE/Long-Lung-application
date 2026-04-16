@@ -189,6 +189,12 @@ def render_pathway_section(cancer_type: str = "Adenocarcinoma"):
 
     # ─── Show results ─────────────────────────────────────────────────────────
     if "enriched_mutations" in st.session_state:
+        st.write("**Debug — drug names:**")
+        for m in st.session_state["enriched_mutations"]:
+            for tx in m["oncokb"].get("treatments", []):
+              drug = " + ".join(d["drugName"] for d in tx["drugs"])
+              st.write(f"`{m['gene']}` → `{drug}`")
+        st.divider()
         enriched  = st.session_state["enriched_mutations"]
         pt_info   = st.session_state.get("patient_info", {})
 
@@ -210,7 +216,17 @@ def render_pathway_section(cancer_type: str = "Adenocarcinoma"):
                     "oncokb":     m["oncokb"],
                 })
 
-
+    if "enriched_mutations" in st.session_state:
+    # debug ชั่วคราว — ดูชื่อยาจริงๆ
+    st.write("**Debug — drug names:**")
+    for m in st.session_state["enriched_mutations"]:
+        for tx in m["oncokb"].get("treatments", []):
+            drug = " + ".join(d["drugName"] for d in tx["drugs"])
+            st.write(f"`{m['gene']}` → `{drug}`")
+    st.divider()
+    
+    # โค้ดเดิมต่อจากนี้...
+    enriched = st.session_state["enriched_mutations"]
 def _render_drug_table(enriched: list[dict]):
     """แสดง drug recommendation table แบบ clean"""
     st.markdown("#### Drug recommendations from OncoKB")
