@@ -763,8 +763,9 @@ def generate_pathway_html(mutations_with_oncokb: list[dict], patient_info: dict)
   .warn {{ background: #faeeda; border-radius: 6px; padding: 8px 10px; margin-top: 6px; font-size: 11px; color: #633806; line-height: 1.5; }}
   .lvl-1 {{ background: #eaf3de; color: #27500a; }}
   .lvl-2 {{ background: #e6f1fb; color: #0c447c; }}
-  .lvl-3 {{ background: #faeeda; color: #633806; }}
-  .lvl-4 {{ background: #f1efe8; color: #5f5e5a; }}
+  .lvl-3a {{ background:#FAEEDA; color:#633806; }}
+  .lvl-4  {{ background:#F1EFE8; color:#5F5E5A; }}
+  .lvl-r  {{ background:#FCEBEB; color:#791F1F; }}
 </style>
 </head>
 <body>
@@ -832,7 +833,13 @@ DRUG_RECS.forEach(dr => {{
   btn.className = 'drug-btn';
   btn.id = 'btn-' + dr.name.replace(/[^a-z0-9]/gi,'_');
   btn.textContent = dr.name;
-  const lvlClass = dr.level === 'LEVEL_1' ? 'lvl-1' : dr.level === 'LEVEL_2' ? 'lvl-2' : 'lvl-3';
+   const lvlClass =
+    dr.level === 'LEVEL_1'  ? 'lvl-1'  :
+    dr.level === 'LEVEL_2'  ? 'lvl-2'  :
+    dr.level === 'LEVEL_3A' ? 'lvl-3a' :
+    dr.level === 'LEVEL_3B' ? 'lvl-3a' :
+    dr.level === 'LEVEL_4'  ? 'lvl-4'  :
+    dr.level === 'LEVEL_R1' ? 'lvl-r'  : 'lvl-4';
   btn.setAttribute('data-level', dr.level);
   btn.setAttribute('data-color', dr.color);
   btn.onclick = function(){{ selectDrug(dr.name, this); }};
@@ -1039,7 +1046,18 @@ function renderPatientOverview() {{
 
   html += `<div class="sec-title" style="margin-top:2px;">Drug recommendations</div><div class="card">`;
   DRUG_RECS.forEach(dr => {{
-    const lvlClass = dr.level==='LEVEL_1'?'lvl-1':dr.level==='LEVEL_2'?'lvl-2':'lvl-3';
+    const lvlClass =
+    dr.level==='LEVEL_1'  ? 'lvl-1'  :
+    dr.level==='LEVEL_2'  ? 'lvl-2'  :
+    dr.level==='LEVEL_3A' ? 'lvl-3a' :
+    dr.level==='LEVEL_3B' ? 'lvl-3a' :
+    dr.level==='LEVEL_4'  ? 'lvl-4'  :
+    dr.level==='LEVEL_R1' ? 'lvl-r'  : 'lvl-4';
+  const lvlDotColors = {{
+    'LEVEL_1':'#27500A','LEVEL_2':'#0C447C',
+    'LEVEL_3A':'#633806','LEVEL_3B':'#633806',
+    'LEVEL_4':'#5F5E5A','LEVEL_R1':'#791F1F'
+  }};
     html += `<div class="rec-row" onclick="document.getElementById('btn-${{dr.name.replace(/[^a-z0-9]/gi,'_')}}')?.click()">
       <div class="rec-dot" style="background:${{dr.color}}"></div>
       <div><div class="rec-name">${{dr.name}}</div>
