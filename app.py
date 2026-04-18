@@ -247,26 +247,61 @@ def img_to_bytes(arr_or_img):
 
 
 def segment_unet(img: Image.Image, unet):
-    arr = np.array(img.resize((256, 256)), dtype=np.float32)
+    arr = np.array(img.resize((256, 256), Image.LANCZOS), dtype=np.float32)
     if arr.ndim == 2:
-        arr = np.stack([arr]*3, axis=-1)
-    arr = arr - arr.min()
-    if arr.max() > 0:
-        arr = arr / arr.max()
-    arr    = np.transpose(arr, (2, 0, 1))
-    arr    = np.expand_dims(arr, 0)
-    tensor = torch.tensor(arr)
+        arr = np.stack([arr] * 3, axis=-1)
+    elif arr.shape[-1] == 4:
+        arr = arr[..., :3]
+    # Per-channel min-max normalization preserves local contrast
+    for c in range(3):
+        lo, hi = arr[..., c].min(), arr[..., c].max()
+        arr[..., c] = (arr[..., c] - lo) / (hi - lo + 1e-8)
+    tensor = torch.tensor(np.expand_dims(np.transpose(arr, (2, 0, 1)), 0))
     with torch.no_grad():
-        output = unet(tensor)
-        mask   = torch.sigmoid(output)
-        mask   = mask[0, 0].detach().numpy()
-    return (mask > 0.3).astype(np.float32)
+        prob_map = torch.sigmoid(unet(tensor))[0, 0].numpy()
+    # Start at threshold 0.3; relax progressively if the mask is nearly empty
+    mask = (prob_map > 0.3).astype(np.float32)
+    if mask.mean() < 0.005:
+        for thresh in [0.2, 0.15, 0.1]:
+            candidate = (prob_map > thresh).astype(np.float32)
+            if candidate.mean() >= 0.005:
+                mask = candidate
+                break
+    return mask, prob_map
 
-def overlay_mask(img: Image.Image, mask):
-    base        = np.array(img.resize((256, 256)), dtype=np.float32) / 255.0
-    red         = np.zeros_like(base)
-    red[..., 0] = mask
-    return np.clip(base + 0.45 * red, 0, 1)
+
+def _mask_dilate(m, n=2):
+    d = m.astype(bool)
+    for _ in range(n):
+        d[:-1] |= d[1:];  d[1:] |= d[:-1]
+        d[:, :-1] |= d[:, 1:];  d[:, 1:] |= d[:, :-1]
+    return d.astype(np.float32)
+
+
+def _mask_erode(m, n=1):
+    e = m.astype(bool)
+    for _ in range(n):
+        e[:-1] &= e[1:];  e[1:] &= e[:-1]
+        e[:, :-1] &= e[:, 1:];  e[:, 1:] &= e[:, :-1]
+    return e.astype(np.float32)
+
+
+def overlay_mask(img: Image.Image, mask, prob_map):
+    base = np.array(img.resize((256, 256), Image.LANCZOS), dtype=np.float32) / 255.0
+    if base.ndim == 2:
+        base = np.stack([base] * 3, axis=-1)
+    elif base.shape[-1] == 4:
+        base = base[..., :3]
+    # Probability heatmap where model confidence exceeds 10 %
+    heat_rgb = cm.get_cmap("hot")(prob_map)[..., :3]
+    visible  = (prob_map > 0.1)[..., np.newaxis]
+    blended  = np.where(visible, 0.45 * base + 0.55 * heat_rgb, base)
+    # Teal contour ring around the binary mask
+    if mask.sum() > 0:
+        contour = np.clip(_mask_dilate(mask, 2) - _mask_erode(mask, 1), 0, 1)
+        teal    = np.array([0.0, 0.78, 0.63], dtype=np.float32)
+        blended = np.where(contour[..., np.newaxis] > 0, teal, blended)
+    return np.clip(blended, 0, 1)
 
 def conf_bars_html(probs):
     html = ""
@@ -329,10 +364,12 @@ if uploaded:
     overlay = overlay_gradcam(img_resized, heatmap) if heatmap is not None else None
 
  
-    seg_overlay = None
+    seg_overlay  = None
+    seg_mask     = None
+    seg_prob_map = None
     if pred_class in CANCER_CLASSES and unet_model is not None:
-        mask        = segment_unet(img_resized, unet_model)
-        seg_overlay = overlay_mask(img_resized, mask)
+        seg_mask, seg_prob_map = segment_unet(img, unet_model)
+        seg_overlay = overlay_mask(img, seg_mask, seg_prob_map)
         
     ct_bytes      = img_to_bytes(img_resized)
     heatmap_bytes = img_to_bytes(overlay) if overlay is not None else None
@@ -379,14 +416,19 @@ if uploaded:
 
     # ── Segmentation ──────────────────────────────────────────
     if seg_overlay is not None:
+        coverage = float(seg_mask.mean()) * 100
         st.markdown('<div class="section-header">Tumor Segmentation</div>', unsafe_allow_html=True)
         s1, s2 = st.columns(2, gap="large")
         with s1:
             st.markdown('<div class="result-card"><div class="card-title">Original</div>', unsafe_allow_html=True)
-            st.image(img_resized, use_column_width=True)
+            st.image(img.resize((256, 256), Image.LANCZOS), use_column_width=True)
             st.markdown('</div>', unsafe_allow_html=True)
         with s2:
-            st.markdown('<div class="result-card"><div class="card-title">Tumor Region</div>', unsafe_allow_html=True)
+            region_label = (
+                f"Tumor Region — {coverage:.1f}% area highlighted"
+                if coverage > 0.1 else "Tumor Region (low model confidence)"
+            )
+            st.markdown(f'<div class="result-card"><div class="card-title">{region_label}</div>', unsafe_allow_html=True)
             st.image(seg_overlay, use_column_width=True)
             st.markdown('</div>', unsafe_allow_html=True)
     elif pred_class in CANCER_CLASSES and unet_model is None:
