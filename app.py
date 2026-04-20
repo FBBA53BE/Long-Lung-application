@@ -180,7 +180,8 @@ BAR_COLORS = {
 @st.cache_resource
 def load_models():
     # ── EfficientNet ──────────────────────────────────────
-    if not os.path.exists("EffnetModel.keras"):
+    if os.path.exists("EffnetModel.keras"):
+        os.remove("EffnetModel.keras")
         with st.spinner("Downloading classification model…"):
             gdown.download(
                 url="https://drive.google.com/file/d/1nDep8UqfUSJdBd4CoUFLIXzC_BjObrs7/view?usp=share_link",
@@ -201,7 +202,8 @@ def load_models():
     effnet = tf.keras.models.load_model("EffnetModel.keras")
     
     # ── U-Net ─────────────────────────────────────────────
-    if not os.path.exists("unetaugmentsegmentation.pth"):
+    if os.path.exists("unetaugmentsegmentation.pth"):
+        os.remove("unetaugmentsegmentation.pth")
         with st.spinner("Downloading segmentation model…"):
             gdown.download(
                 url="https://drive.google.com/file/d/1GZ7_-y_mEioS68Joj43Jh8TpuyEzqxWA/view?usp=share_link",
