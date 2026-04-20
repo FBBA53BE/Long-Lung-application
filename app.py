@@ -177,47 +177,23 @@ BAR_COLORS = {
 # ════════════════════════════════════════════════════════════
 # MODEL LOADING
 # ════════════════════════════════════════════════════════════
+from huggingface_hub import hf_hub_download
+
 @st.cache_resource
 def load_models():
-    # EfficientNet
-    if os.path.exists("EffnetModel.keras"):
-        os.remove("EffnetModel.keras")
-    
-    with st.spinner("Downloading classification model…"):
-        gdown.download(
-            url="https://drive.google.com/uc?id=1nDep8UqfUSJdBd4CoUFLIXzC_BjObrs7",
-            output="EffnetModel.keras",
-            quiet=False
-        )
-    
-    if not os.path.exists("EffnetModel.keras"):
-        st.error("ดาวน์โหลด EffnetModel.keras ล้มเหลว")
-        st.stop()
-    
-    size_mb = os.path.getsize("EffnetModel.keras") / 1_000_000
-    st.write(f"EffnetModel.keras: {size_mb:.1f} MB")
-    
-    effnet = tf.keras.models.load_model("EffnetModel.keras")
-    
-    # UNet
-    if os.path.exists("unetaugmentsegmentation.pth"):
-        os.remove("unetaugmentsegmentation.pth")
-    
-    with st.spinner("Downloading segmentation model…"):
-        gdown.download(
-            url="https://drive.google.com/uc?id=1GZ7_-y_mEioS68Joj43Jh8TpuyEzqxWA",
-            output="unetaugmentsegmentation.pth",
-            quiet=False
-        )
-    
-    if not os.path.exists("unetaugmentsegmentation.pth"):
-        st.error("ดาวน์โหลด unet ล้มเหลว")
-        st.stop()
-    
-    size_mb = os.path.getsize("unetaugmentsegmentation.pth") / 1_000_000
-    st.write(f"unet: {size_mb:.1f} MB")
-   # ใหม่ — ถูก ใช้ฟังก์ชันที่มีอยู่แล้ว
-    unet, threshold, img_size = load_seg_model("unetaugmentsegmentation.pth", device="cpu")
+    # Download EfficientNet
+    effnet_path = hf_hub_download(
+        repo_id="Kaomunkai/Long-lung-application",
+        filename="EffnetModel.keras"
+    )
+    effnet = tf.keras.models.load_model(effnet_path)
+
+    # Download UNet
+    unet_path = hf_hub_download(
+        repo_id="Kaomunkai/Long-lung-application",
+        filename="unetaugmentsegmentation.pth"
+    )
+    unet, threshold, img_size = load_seg_model(unet_path, device="cpu")
 
     return effnet, unet
 
