@@ -208,6 +208,8 @@ def img_to_bytes(arr_or_img):
         arr_or_img.save(buf, format="PNG")
     return buf.getvalue()
 
+UNET_THRESHOLD = 0.5  # หรือค่าที่ได้จาก load_seg_model
+UNET_IMG_SIZE  = 256
 
 def segment_unet(img: Image.Image, unet):
     size = UNET_IMG_SIZE
