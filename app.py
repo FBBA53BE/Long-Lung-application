@@ -94,15 +94,15 @@ st.markdown("""
 @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Sans:ital,wght@0,300;0,400;1,300&display=swap');
 
 :root {
-    --bg:        #050A0E;
-    --surface:   #0D1B24;
-    --card:      #112030;
-    --accent:    #00C8A0;
-    --accent2:   #0077FF;
-    --danger:    #FF4D6D;
-    --text:      #E8F4F0;
-    --muted:     #5A7A70;
-    --border:    rgba(0,200,160,0.15);
+--bg:        #050A0E;
+--surface:   #0D1B24;
+--card:      #112030;
+--accent:    #00C8A0;
+--accent2:   #0077FF;
+--danger:    #FF4D6D;
+--text:      #E8F4F0;
+--muted:     #5A7A70;
+--border:    rgba(0,200,160,0.15);
 }
 
 * { box-sizing: border-box; }
