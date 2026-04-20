@@ -273,7 +273,7 @@ def segment_unet(img: Image.Image, unet):
         mask   = mask[0, 0].detach().numpy()
     return (mask > 0.3).astype(np.float32)
 def overlay_mask(img: Image.Image, mask):
-        base        = np.array(img.resize((256, 256)), dtype=np.float32) / 255.0
+    base        = np.array(img.resize((256, 256)), dtype=np.float32) / 255.0
     red         = np.zeros_like(base)
     red[..., 0] = mask
     return np.clip(base + 0.45 * red, 0, 1)
