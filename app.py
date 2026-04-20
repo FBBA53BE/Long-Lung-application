@@ -179,9 +179,11 @@ BAR_COLORS = {
 # ════════════════════════════════════════════════════════════
 @st.cache_resource
 def load_models():
+    try:
     # ── EfficientNet ──────────────────────────────────────
-    if os.path.exists("EffnetModel.keras"):
-        os.remove("EffnetModel.keras")
+        if os.path.exists("EffnetModel.keras"):
+            os.remove("EffnetModel.keras")
+            
         with st.spinner("Downloading classification model…"):
             gdown.download(
                 url="https://drive.google.com/file/d/1nDep8UqfUSJdBd4CoUFLIXzC_BjObrs7/view?usp=share_link",
@@ -191,7 +193,7 @@ def load_models():
             )
 
     # ตรวจสอบว่าไฟล์ดาวน์โหลดได้จริง
-    st.write(f"gdown result: {result}")  # ดูว่า gdown คืนค่าอะไร
+        st.write(f"gdown result: {result}")  # ดูว่า gdown คืนค่าอะไร
         
         if not os.path.exists("EffnetModel.keras"):
             st.error("ไฟล์ไม่ถูกสร้าง — ดาวน์โหลดล้มเหลว")
