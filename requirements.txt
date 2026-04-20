@@ -1,11 +1,10 @@
 streamlit>=1.32.0
-tensorflow>=2.15.0
+tensorflow==2.15.0
 gdown
 pillow
 numpy
 matplotlib
 torch
 torchvision
-segmentation-models-pytorch
 pandas
 scikit-image
