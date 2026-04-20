@@ -216,11 +216,8 @@ def load_models():
     
     size_mb = os.path.getsize("unetaugmentsegmentation.pth") / 1_000_000
     st.write(f"unet: {size_mb:.1f} MB")
-    unet = UNet()
-    checkpoint = torch.load("unetaugmentsegmentation.pth",
-                            map_location=torch.device("cpu"))
-    unet.load_state_dict(checkpoint["model_state_dict"])
-    unet.eval()
+   # ใหม่ — ถูก ใช้ฟังก์ชันที่มีอยู่แล้ว
+    unet, threshold, img_size = load_seg_model("unetaugmentsegmentation.pth", device="cpu")
 
     return effnet, unet
 
