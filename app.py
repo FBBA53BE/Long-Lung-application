@@ -12,7 +12,51 @@ import io
 
 import torch
 import torch.nn as nn
-import segmentation_models_pytorch as smp
+
+# ── Custom UNet (matches the saved checkpoint architecture) ──────────────────
+class DoubleConv(nn.Module):
+    def __init__(self, in_ch, out_ch):
+        super().__init__()
+        self.net = nn.Sequential(
+            nn.Conv2d(in_ch, out_ch, 3, padding=1, bias=False),
+            nn.BatchNorm2d(out_ch),
+            nn.ReLU(inplace=True),
+            nn.Conv2d(out_ch, out_ch, 3, padding=1, bias=False),
+            nn.BatchNorm2d(out_ch),
+            nn.ReLU(inplace=True),
+        )
+    def forward(self, x): return self.net(x)
+
+class UNet(nn.Module):
+    def __init__(self, in_channels=3, out_channels=1, features=[64,128,256,512]):
+        super().__init__()
+        self.downs      = nn.ModuleList()
+        self.ups        = nn.ModuleList()
+        self.pool       = nn.MaxPool2d(2, 2)
+        ch = in_channels
+        for f in features:
+            self.downs.append(DoubleConv(ch, f))
+            ch = f
+        self.bottleneck = DoubleConv(features[-1], features[-1]*2)
+        for f in reversed(features):
+            self.ups.append(nn.ConvTranspose2d(f*2, f, 2, 2))
+            self.ups.append(DoubleConv(f*2, f))
+        self.final = nn.Conv2d(features[0], out_channels, 1)
+
+    def forward(self, x):
+        skips = []
+        for down in self.downs:
+            x = down(x); skips.append(x); x = self.pool(x)
+        x = self.bottleneck(x)
+        skips = skips[::-1]
+        for i in range(0, len(self.ups), 2):
+            x = self.ups[i](x)
+            skip = skips[i//2]
+            if x.shape != skip.shape:
+                x = nn.functional.interpolate(x, size=skip.shape[2:])
+            x = torch.cat([skip, x], dim=1)
+            x = self.ups[i+1](x)
+        return self.final(x)
 # ════════════════════════════════════════════════════════════
 # PAGE CONFIG
 # ════════════════════════════════════════════════════════════
@@ -301,29 +345,20 @@ def load_models():
             )
     effnet = tf.keras.models.load_model("EffnetModel.keras")
 
-    # ── U-Net (.pth — PyTorch, smp.Unet + resnet34) ──
+    # ── U-Net (.pth — custom UNet checkpoint) ───────────────────────────────
     if not os.path.exists("unet_lung_cancer_full_NEW.pth"):
         with st.spinner("Downloading segmentation model…"):
             gdown.download(
                 "https://drive.google.com/file/d/1tPo-cywtiLAJAEOVORoiomSuNV7g40FV/view?usp=share_link",
                 "unet_lung_cancer_full_NEW.pth", quiet=False
             )
-    # Checkpoint is a dict — rebuild architecture then load weights
-    ckpt = torch.load("unet_lung_cancer_full_NEW.pth",
-                      map_location=torch.device("cpu"),
-                      weights_only=False)
-    encoder   = ckpt.get("encoder",   "resnet34")
+    ckpt      = torch.load("unet_lung_cancer_full_NEW.pth",
+                           map_location=torch.device("cpu"),
+                           weights_only=False)
     img_size  = ckpt.get("img_size",  256)
     threshold = ckpt.get("threshold", 0.5)
 
-    unet = smp.Unet(
-        encoder_name=encoder,
-        encoder_weights=None,          # weights come from the checkpoint
-        in_channels=3,
-        classes=1,
-        activation=None,
-        decoder_attention_type="scse",
-    )
+    unet = UNet(in_channels=3, out_channels=1)
     unet.load_state_dict(ckpt["model_state_dict"])
     unet.eval()
 
@@ -375,28 +410,27 @@ def overlay_gradcam(img: Image.Image, heatmap, alpha=0.45):
     return np.clip((1 - alpha) * base + alpha * colored, 0, 1)
 
 def segment_unet(img: Image.Image, unet):
-    size = UNET_IMG_SIZE  # 256 from checkpoint
-    arr  = np.array(img.resize((size, size)), dtype=np.float32)
-
-    # Normalise same as training (per-image min-max)
-    arr = arr - arr.min()
-    if arr.max() > 0:
-        arr = arr / arr.max()
-
+    size = UNET_IMG_SIZE
+    arr  = np.array(img.resize((size, size)), dtype=np.float32) / 255.0
     # (H,W,3) → (1,3,H,W)
     tensor = torch.from_numpy(arr).permute(2, 0, 1).unsqueeze(0).float()
 
     with torch.no_grad():
-        logit = unet(tensor)                      # raw logits (1,1,H,W)
+        logit = unet(tensor)
         mask  = torch.sigmoid(logit)[0, 0].numpy()
 
     return (mask > UNET_THRESHOLD).astype(np.float32)
 
 def overlay_mask(img: Image.Image, mask):
-    base     = np.array(img.resize((256, 256)), dtype=np.float32) / 255.0
-    red      = np.zeros_like(base)
-    red[..., 0] = mask
-    return np.clip(base + 0.45 * red, 0, 1)
+    """Overlay red highlight on tumor region."""
+    size = UNET_IMG_SIZE
+    base = np.array(img.resize((size, size)), dtype=np.float32) / 255.0
+    out  = base.copy()
+    # Red channel boosted, green+blue dimmed → vivid red highlight
+    out[mask > 0, 0] = np.clip(base[mask > 0, 0] * 0.4 + 0.8, 0, 1)  # R ↑
+    out[mask > 0, 1] = base[mask > 0, 1] * 0.2                         # G ↓
+    out[mask > 0, 2] = base[mask > 0, 2] * 0.2                         # B ↓
+    return np.clip(out, 0, 1)
 
 def conf_bars_html(probs):
     html = ""
