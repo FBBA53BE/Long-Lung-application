@@ -296,17 +296,17 @@ def load_models():
     if not os.path.exists("EffnetModel.keras"):
         with st.spinner("Downloading classification model…"):
             gdown.download(
-                "https://drive.google.com/file/d/1I3uHydg5JDTi6EQ1xn9ZQ1daDcXb9csW/view?usp=share_link",  # ← แก้ตรงนี้
+                "https://drive.google.com/drive/folders/1A94RqoUvrHymN-i38PLkennVmvj0loAK",  # ← แก้ตรงนี้
                 "EffnetModel.keras", quiet=False
             )
     effnet = tf.keras.models.load_model("EffnetModel.keras")
 
     # ── U-Net (.pth — custom UNet checkpoint) ───────────────────────────────
-    if not os.path.exists("unet_lung_cancer_full_NEW.pth"):
+    if not os.path.exists("unetaugmentsegmentation.pth"):
         with st.spinner("Downloading segmentation model…"):
             gdown.download(
-                "https://drive.google.com/file/d/1tPo-cywtiLAJAEOVORoiomSuNV7g40FV/view?usp=share_link",
-                "unet_lung_cancer_full_NEW.pth", quiet=False
+                "https://drive.google.com/drive/folders/1A94RqoUvrHymN-i38PLkennVmvj0loAK",
+                "unetaugmentsegmentation.pth", quiet=False
             )
     ckpt      = torch.load("unet_lung_cancer_full_NEW.pth",
                            map_location=torch.device("cpu"),
