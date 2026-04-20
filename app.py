@@ -360,6 +360,14 @@ if uploaded:
         m2.metric("Estimated Area", f"{tumor_area_cm2:.2f} cm²")
         m3.metric("Tumor Pixels", f"{tumor_pixels:,} px")
 
+        if tumor_percent < 1.0:
+        st.warning("""
+        ⚠️ **The tumor boundary could not be clearly identified in this image.**  
+        This may be due to image complexity, low contrast, or ambiguous tumor margins.  
+        Please consult a qualified radiologist or medical specialist for further evaluation.
+        """)
+
+
     elif pred_class in CANCER_CLASSES and unet_model is None:
         st.info("🔬 Segmentation model not loaded yet — coming soon.")
     elif pred_class not in CANCER_CLASSES:
