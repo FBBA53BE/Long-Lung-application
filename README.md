@@ -13,7 +13,8 @@ Datset for drug recommendation : Oncokb
 EfficientNet :
               accuracy : 96.47%   support - 736
 U-net :
-        Loss : 0.1946
-        Dice : 0.6521
-        IoU  : 0.5125
+        Dice Score : 0.8324 +/- 0.0832
+        IoU Score  : 0.7211 +/- 0.1123
+        Precision  : 0.8728 +/- 0.0890
+        Recall     : 0.8048 +/- 0.1073
 
