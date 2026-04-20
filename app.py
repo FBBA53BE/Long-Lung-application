@@ -15,7 +15,7 @@ sys.path.append(os.path.dirname(__file__))
 from pathway_module.pathway_section import render_pathway_section, get_sample_csv_bytes
 from datetime import datetime
 import segmentation_models_pytorch as smp
-
+import pandas as pd
 def load_seg_model(path, device='cpu'):
     ckpt  = torch.load(path, map_location=device)
     model = smp.Unet(
