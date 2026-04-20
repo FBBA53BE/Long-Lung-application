@@ -191,12 +191,17 @@ def load_models():
             )
 
     # ตรวจสอบว่าไฟล์ดาวน์โหลดได้จริง
-    size_mb = os.path.getsize("EffnetModel.keras") / 1_000_000
-    st.write(f"ขนาดไฟล์: {size_mb:.1f} MB")  # ดูว่าดาวน์โหลดได้จริงไหม
-    
-    if size_mb < 1:
-        os.remove("EffnetModel.keras")
-        st.error("ดาวน์โหลดล้มเหลว ไฟล์เสียหาย")
+    st.write(f"gdown result: {result}")  # ดูว่า gdown คืนค่าอะไร
+        
+        if not os.path.exists("EffnetModel.keras"):
+            st.error("ไฟล์ไม่ถูกสร้าง — ดาวน์โหลดล้มเหลว")
+            st.stop()
+            
+        size_mb = os.path.getsize("EffnetModel.keras") / 1_000_000
+        st.write(f"ขนาดไฟล์: {size_mb:.1f} MB")
+        
+    except Exception as e:
+        st.error(f"Error: {e}")
         st.stop()
 
     effnet = tf.keras.models.load_model("EffnetModel.keras")
