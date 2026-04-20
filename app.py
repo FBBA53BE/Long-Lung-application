@@ -290,6 +290,7 @@ if uploaded:
     seg_overlay = None
     if pred_class in CANCER_CLASSES and unet_model is not None:
         mask        = segment_unet(img_resized, unet_model)
+        seg_mask    = mask 
         seg_overlay = overlay_mask(img_resized, mask)
         
     ct_bytes      = img_to_bytes(img_resized)
@@ -334,7 +335,7 @@ if uploaded:
             st.image(overlay, use_column_width=True)
             st.markdown('</div>', unsafe_allow_html=True)
 
-    # ── Segmentation ──────────────────────────────────────────
+    # ── Segmentation ──────────────────────────────────────────    
     if seg_overlay is not None:
         st.markdown('<div class="section-header">Tumor Segmentation</div>', unsafe_allow_html=True)
         s1, s2 = st.columns(2, gap="large")
@@ -346,6 +347,19 @@ if uploaded:
             st.markdown('<div class="result-card"><div class="card-title">Tumor Region</div>', unsafe_allow_html=True)
             st.image(seg_overlay, use_column_width=True)
             st.markdown('</div>', unsafe_allow_html=True)
+
+             # คำนวณและแสดง metrics
+        tumor_pixels  = int(seg_mask.sum())
+        total_pixels  = seg_mask.size
+        tumor_percent = (tumor_pixels / total_pixels) * 100
+        tumor_area_cm2 = (tumor_pixels * 0.5 * 0.5) / 100  # สมมติ 0.5mm/pixel
+
+         st.markdown("---")
+        m1, m2, m3 = st.columns(3)
+        m1.metric("Tumor Coverage", f"{tumor_percent:.1f}%")
+        m2.metric("Estimated Area", f"{tumor_area_cm2:.2f} cm²")
+        m3.metric("Tumor Pixels", f"{tumor_pixels:,} px")
+
     elif pred_class in CANCER_CLASSES and unet_model is None:
         st.info("🔬 Segmentation model not loaded yet — coming soon.")
     elif pred_class not in CANCER_CLASSES:
