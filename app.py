@@ -361,11 +361,11 @@ if uploaded:
         m3.metric("Tumor Pixels", f"{tumor_pixels:,} px")
 
         if tumor_percent < 1.0:
-        st.warning("""
-        ⚠️ **The tumor boundary could not be clearly identified in this image.**  
-        This may be due to image complexity, low contrast, or ambiguous tumor margins.  
-        Please consult a qualified radiologist or medical specialist for further evaluation.
-        """)
+            st.warning("""
+            ⚠️ **The tumor boundary could not be clearly identified in this image.**  
+            This may be due to image complexity, low contrast, or ambiguous tumor margins.  
+            Please consult a qualified radiologist or medical specialist for further evaluation.
+            """)
 
 
     elif pred_class in CANCER_CLASSES and unet_model is None:
