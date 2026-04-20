@@ -12,3 +12,4 @@ pandas
 reportlab
 segmentation-models-pytorch
 scikit-image
+huggingface_hub
