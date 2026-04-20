@@ -183,7 +183,7 @@ def load_models():
     if not os.path.exists("EffnetModel.keras"):
         with st.spinner("Downloading classification model…"):
             gdown.download(
-                id="1nDep8UqfUSJdBd4CoUFLIXzC_BjObrs7",
+                url="https://drive.google.com/file/d/1nDep8UqfUSJdBd4CoUFLIXzC_BjObrs7/view?usp=share_link",
                 output="EffnetModel.keras",
                 quiet=False,
                 fuzzy=True          # <── เพิ่ม fuzzy=True
@@ -202,7 +202,7 @@ def load_models():
     if not os.path.exists("unetaugmentsegmentation.pth"):
         with st.spinner("Downloading segmentation model…"):
             gdown.download(
-                id="1GZ7_-y_mEioS68Joj43Jh8TpuyEzqxWA",
+                url="https://drive.google.com/file/d/1GZ7_-y_mEioS68Joj43Jh8TpuyEzqxWA/view?usp=share_link",
                 output="unetaugmentsegmentation.pth",
                 quiet=False,
                 fuzzy=True
