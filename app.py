@@ -190,10 +190,12 @@ def load_models():
             )
 
     # ตรวจสอบว่าไฟล์ดาวน์โหลดได้จริง
-    size = os.path.getsize("EffnetModel.keras")
-    if size < 1_000_000:            # ถ้าไฟล์ < 1MB แสดงว่าผิดปกติ
+    size_mb = os.path.getsize("EffnetModel.keras") / 1_000_000
+    st.write(f"ขนาดไฟล์: {size_mb:.1f} MB")  # ดูว่าดาวน์โหลดได้จริงไหม
+    
+    if size_mb < 1:
         os.remove("EffnetModel.keras")
-        st.error(f"ดาวน์โหลด EffnetModel.keras ล้มเหลว (ขนาดไฟล์เพียง {size} bytes)")
+        st.error("ดาวน์โหลดล้มเหลว ไฟล์เสียหาย")
         st.stop()
 
     effnet = tf.keras.models.load_model("EffnetModel.keras")
