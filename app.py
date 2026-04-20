@@ -178,11 +178,16 @@ BAR_COLORS = {
 # MODEL LOADING
 # ════════════════════════════════════════════════════════════
 @st.cache_resource
+import gdown
+import os
+
+@st.cache_resource
+
 def load_models():
     if not os.path.exists("EffnetModel.keras"):
         with st.spinner("Downloading classification model…"):
             gdown.download(
-                "https://drive.google.com/file/d/1GZ7_-y_mEioS68Joj43Jh8TpuyEzqxWA/view?usp=share_link",
+                "https://drive.google.com/file/d/1I3uHydg5JDTi6EQ1xn9ZQ1daDcXb9csW/view?usp=share_link",
                 "EffnetModel.keras", quiet=False
             )
     effnet = tf.keras.models.load_model("EffnetModel.keras")
