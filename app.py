@@ -179,44 +179,43 @@ BAR_COLORS = {
 # ════════════════════════════════════════════════════════════
 @st.cache_resource
 def load_models():
-    try:
-    # ── EfficientNet ──────────────────────────────────────
-        if os.path.exists("EffnetModel.keras"):
-            os.remove("EffnetModel.keras")
-            
-        with st.spinner("Downloading classification model…"):
-            gdown.download(
-                url="https://drive.google.com/file/d/1nDep8UqfUSJdBd4CoUFLIXzC_BjObrs7/view?usp=share_link",
-                output="EffnetModel.keras",
-                quiet=False,        # <── เพิ่ม fuzzy=True
-            )
-
-    # ตรวจสอบว่าไฟล์ดาวน์โหลดได้จริง
-        st.write(f"gdown result: {result}")  # ดูว่า gdown คืนค่าอะไร
-        
-        if not os.path.exists("EffnetModel.keras"):
-            st.error("ไฟล์ไม่ถูกสร้าง — ดาวน์โหลดล้มเหลว")
-            st.stop()
-            
-        size_mb = os.path.getsize("EffnetModel.keras") / 1_000_000
-        st.write(f"ขนาดไฟล์: {size_mb:.1f} MB")
-        
-    except Exception as e:
-        st.error(f"Error: {e}")
+    # EfficientNet
+    if os.path.exists("EffnetModel.keras"):
+        os.remove("EffnetModel.keras")
+    
+    with st.spinner("Downloading classification model…"):
+        gdown.download(
+            url="https://drive.google.com/uc?id=1nDep8UqfUSJdBd4CoUFLIXzC_BjObrs7",
+            output="EffnetModel.keras",
+            quiet=False
+        )
+    
+    if not os.path.exists("EffnetModel.keras"):
+        st.error("ดาวน์โหลด EffnetModel.keras ล้มเหลว")
         st.stop()
-
+    
+    size_mb = os.path.getsize("EffnetModel.keras") / 1_000_000
+    st.write(f"EffnetModel.keras: {size_mb:.1f} MB")
+    
     effnet = tf.keras.models.load_model("EffnetModel.keras")
     
-    # ── U-Net ─────────────────────────────────────────────
+    # UNet
     if os.path.exists("unetaugmentsegmentation.pth"):
         os.remove("unetaugmentsegmentation.pth")
-        with st.spinner("Downloading segmentation model…"):
-            gdown.download(
-                url="https://drive.google.com/file/d/1GZ7_-y_mEioS68Joj43Jh8TpuyEzqxWA/view?usp=share_link",
-                output="unetaugmentsegmentation.pth",
-                quiet=False,
-            )
-            
+    
+    with st.spinner("Downloading segmentation model…"):
+        gdown.download(
+            url="https://drive.google.com/uc?id=1GZ7_-y_mEioS68Joj43Jh8TpuyEzqxWA",
+            output="unetaugmentsegmentation.pth",
+            quiet=False
+        )
+    
+    if not os.path.exists("unetaugmentsegmentation.pth"):
+        st.error("ดาวน์โหลด unet ล้มเหลว")
+        st.stop()
+    
+    size_mb = os.path.getsize("unetaugmentsegmentation.pth") / 1_000_000
+    st.write(f"unet: {size_mb:.1f} MB")
     unet = UNet()
     checkpoint = torch.load("unetaugmentsegmentation.pth",
                             map_location=torch.device("cpu"))
