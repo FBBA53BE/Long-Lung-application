@@ -179,20 +179,35 @@ BAR_COLORS = {
 # ════════════════════════════════════════════════════════════
 @st.cache_resource
 def load_models():
+    # ── EfficientNet ──────────────────────────────────────
     if not os.path.exists("EffnetModel.keras"):
         with st.spinner("Downloading classification model…"):
             gdown.download(
-                "https://drive.google.com/file/d/1nDep8UqfUSJdBd4CoUFLIXzC_BjObrs7/view?usp=share_link",
-                "EffnetModel.keras", quiet=False
+                id="1nDep8UqfUSJdBd4CoUFLIXzC_BjObrs7",
+                output="EffnetModel.keras",
+                quiet=False,
+                fuzzy=True          # <── เพิ่ม fuzzy=True
             )
-    effnet = tf.keras.models.load_model("EffnetModel.keras")
 
+    # ตรวจสอบว่าไฟล์ดาวน์โหลดได้จริง
+    size = os.path.getsize("EffnetModel.keras")
+    if size < 1_000_000:            # ถ้าไฟล์ < 1MB แสดงว่าผิดปกติ
+        os.remove("EffnetModel.keras")
+        st.error(f"ดาวน์โหลด EffnetModel.keras ล้มเหลว (ขนาดไฟล์เพียง {size} bytes)")
+        st.stop()
+
+    effnet = tf.keras.models.load_model("EffnetModel.keras")
+    
+    # ── U-Net ─────────────────────────────────────────────
     if not os.path.exists("unetaugmentsegmentation.pth"):
         with st.spinner("Downloading segmentation model…"):
             gdown.download(
-                "https://drive.google.com/file/d/1GZ7_-y_mEioS68Joj43Jh8TpuyEzqxWA/view?usp=share_link",
-                "unetaugmentsegmentation.pth", quiet=False
+                id="1GZ7_-y_mEioS68Joj43Jh8TpuyEzqxWA",
+                output="unetaugmentsegmentation.pth",
+                quiet=False,
+                fuzzy=True
             )
+            
     unet = UNet()
     checkpoint = torch.load("unetaugmentsegmentation.pth",
                             map_location=torch.device("cpu"))
