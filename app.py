@@ -14,6 +14,21 @@ from pathway_module.report_generator import generate_report_pdf
 sys.path.append(os.path.dirname(__file__))
 from pathway_module.pathway_section import render_pathway_section, get_sample_csv_bytes
 from datetime import datetime
+import segmentation_models_pytorch as smp
+
+def load_seg_model(path, device='cpu'):
+    ckpt  = torch.load(path, map_location=device)
+    model = smp.Unet(
+        encoder_name=ckpt.get('encoder', 'efficientnet-b4'),
+        encoder_weights=None,   # weights are in the checkpoint
+        in_channels=3,
+        classes=1,
+        activation=None,
+        decoder_attention_type='scse',
+    )
+    model.load_state_dict(ckpt['model_state_dict'])
+    model.eval()
+    return model, ckpt.get('threshold', 0.5), ckpt.get('img_size', 256)
 # ════════════════════════════════════════════════════════════
 # UNET CLASS
 # ════════════════════════════════════════════════════════════
