@@ -354,7 +354,7 @@ if uploaded:
         tumor_percent = (tumor_pixels / total_pixels) * 100
         tumor_area_cm2 = (tumor_pixels * 0.5 * 0.5) / 100  # สมมติ 0.5mm/pixel
 
-         st.markdown("---")
+      
         m1, m2, m3 = st.columns(3)
         m1.metric("Tumor Coverage", f"{tumor_percent:.1f}%")
         m2.metric("Estimated Area", f"{tumor_area_cm2:.2f} cm²")
