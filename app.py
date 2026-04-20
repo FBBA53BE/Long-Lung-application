@@ -188,8 +188,7 @@ def load_models():
             gdown.download(
                 url="https://drive.google.com/file/d/1nDep8UqfUSJdBd4CoUFLIXzC_BjObrs7/view?usp=share_link",
                 output="EffnetModel.keras",
-                quiet=False,
-                fuzzy=True          # <── เพิ่ม fuzzy=True
+                quiet=False,        # <── เพิ่ม fuzzy=True
             )
 
     # ตรวจสอบว่าไฟล์ดาวน์โหลดได้จริง
@@ -216,7 +215,6 @@ def load_models():
                 url="https://drive.google.com/file/d/1GZ7_-y_mEioS68Joj43Jh8TpuyEzqxWA/view?usp=share_link",
                 output="unetaugmentsegmentation.pth",
                 quiet=False,
-                fuzzy=True
             )
             
     unet = UNet()
