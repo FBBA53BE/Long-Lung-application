@@ -6,5 +6,6 @@ numpy
 matplotlib
 torch
 torchvision
+segmentation-models-pytorch
 pandas
 scikit-image
