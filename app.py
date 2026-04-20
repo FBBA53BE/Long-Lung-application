@@ -182,7 +182,7 @@ def load_models():
     if not os.path.exists("EffnetModel.keras"):
         with st.spinner("Downloading classification model…"):
             gdown.download(
-                "https://drive.google.com/file/d/1I3uHydg5JDTi6EQ1xn9ZQ1daDcXb9csW/view?usp=share_link",
+                "https://drive.google.com/file/d/1nDep8UqfUSJdBd4CoUFLIXzC_BjObrs7/view?usp=share_link",
                 "EffnetModel.keras", quiet=False
             )
     effnet = tf.keras.models.load_model("EffnetModel.keras")
