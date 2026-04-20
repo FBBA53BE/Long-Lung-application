@@ -149,7 +149,8 @@ def load_models():
         filename="unetaugmentsegmentation.pth"
     )
     unet, threshold, img_size = load_seg_model(unet_path, device="cpu")
-
+    UNET_THRESHOLD = threshold
+    UNET_IMG_SIZE  = img_size
     return effnet, unet
 
 effnet_model, unet_model = load_models()
@@ -209,25 +210,22 @@ def img_to_bytes(arr_or_img):
 
 
 def segment_unet(img: Image.Image, unet):
-    arr = np.array(img.resize((256, 256)), dtype=np.float32)
-    if arr.ndim == 2:
-        arr = np.stack([arr]*3, axis=-1)
-    arr = arr - arr.min()
-    if arr.max() > 0:
-        arr = arr / arr.max()
-    arr    = np.transpose(arr, (2, 0, 1))
-    arr    = np.expand_dims(arr, 0)
-    tensor = torch.tensor(arr)
+    size = UNET_IMG_SIZE
+    arr  = np.array(img.resize((size, size)), dtype=np.float32) / 255.0
+    tensor = torch.from_numpy(arr).permute(2, 0, 1).unsqueeze(0).float()
     with torch.no_grad():
-        output = unet(tensor)
-        mask   = torch.sigmoid(output)
-        mask   = mask[0, 0].detach().numpy()
-    return (mask > 0.3).astype(np.float32)
+        logit = unet(tensor)
+        mask  = torch.sigmoid(logit)[0, 0].numpy()
+    return (mask > UNET_THRESHOLD).astype(np.float32)
+
 def overlay_mask(img: Image.Image, mask):
-    base        = np.array(img.resize((256, 256)), dtype=np.float32) / 255.0
-    red         = np.zeros_like(base)
-    red[..., 0] = mask
-    return np.clip(base + 0.45 * red, 0, 1)
+    size = UNET_IMG_SIZE
+    base = np.array(img.resize((size, size)), dtype=np.float32) / 255.0
+    out  = base.copy()
+    out[mask > 0, 0] = np.clip(base[mask > 0, 0] * 0.4 + 0.8, 0, 1)
+    out[mask > 0, 1] = base[mask > 0, 1] * 0.2
+    out[mask > 0, 2] = base[mask > 0, 2] * 0.2
+    return np.clip(out, 0, 1)
 
 def conf_bars_html(probs):
     html = ""
