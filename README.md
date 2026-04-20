@@ -8,6 +8,7 @@ Output : Classification ; Adenocarcinoma, Large cell carcinoma, Squamous cell ca
         Drug recommendation
 Model : EfficienNet & U-net
 Dataset for Models : https://www.kaggle.com/datasets/lalosalamanca1261/lung-cancer-ct-scans
+https://www.kaggle.com/datasets/rasoulisaeid/lung-cancer-segment
 Datset for drug recommendation : Oncokb
 
 EfficientNet :
