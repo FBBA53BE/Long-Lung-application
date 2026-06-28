@@ -193,7 +193,7 @@ def make_gradcam(img_array, model):
         return None
 def overlay_gradcam(img: Image.Image, heatmap, alpha=0.45):
     h       = np.array(Image.fromarray(np.uint8(heatmap * 255)).resize((224, 224))) / 255.0
-    colored = cm.get_cmap("jet")(h)[..., :3]
+    colored = cm.colormaps("jet")(h)[..., :3]
     base    = np.array(img, dtype=np.float32) / 255.0
     return np.clip((1 - alpha) * base + alpha * colored, 0, 1)
 
